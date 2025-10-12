@@ -1,0 +1,48 @@
+# Archivos de compilación y empaquetado
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+
+# Carpetas de salida de compilación
+target/
+out/
+
+# Carpetas de build de Gradle
+.gradle
+build/
+
+# Reglas específicas de Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+### IntelliJ IDEA ###
+# Ignora la carpeta entera, es más robusto
+.idea/
+# Los archivos .iml son específicos del módulo de IntelliJ
+*.iml
+
+### VS Code ###
+.vscode/
+
+### Eclipse ###
+.classpath
+.project
+.settings
+.factorypath
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Mac OS ###
+.DS_Store
