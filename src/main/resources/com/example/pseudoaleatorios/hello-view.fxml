@@ -1,16 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.pseudoaleatorios.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.example.pseudoaleatorios.HelloController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Generados De Numeros Aleatorios">
+            <items>
+                  <MenuItem fx:id="mi_cuadradosMedios" mnemonicParsing="false" text="Cuadrados Medios" />
+                  <MenuItem fx:id="mi_multiplicadorConstante" mnemonicParsing="false" text="Multiplicador Constante" />
+              <MenuItem fx:id="mi_productosMedios" mnemonicParsing="false" text="Productos Medios" />
+                  <MenuItem fx:id="mi_aditivo" mnemonicParsing="false" text="Congruencial Aditivo" />
+                  <MenuItem fx:id="mi_multiplicativo" mnemonicParsing="false" text="Congruencial Multiplicativo" />
+                  <MenuItem fx:id="mi_lineal" mnemonicParsing="false" text="Congruencial Lineal" />
+                  <MenuItem fx:id="mi_cuadratico" mnemonicParsing="false" text="Congruencial Cuadratico" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Pruebas Estdisticas">
+            <items>
+                  <MenuItem mnemonicParsing="false" text="Uniformidad" />
+              <MenuItem mnemonicParsing="false" text="Aleatoriedad" />
+                  <MenuItem mnemonicParsing="false" text="Compresibilidad" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Casos De Uso">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn fx:id="tc_n" minWidth="30.0" prefWidth="75.0" text="n" />
+            <TableColumn fx:id="tc_yn" minWidth="200.0" prefWidth="75.0" text="Yn" />
+          <TableColumn fx:id="tc_xn" minWidth="200.0" prefWidth="75.0" text="Xn" />
+          <TableColumn fx:id="tc_rn" minWidth="200.0" prefWidth="75.0" text="Rn" />
+        </columns>
+      </TableView>
+   </center>
+   <left>
+      <VBox alignment="TOP_CENTER" prefHeight="573.0" prefWidth="140.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefHeight="131.0" prefWidth="124.0" text="Selecciona un generador e ingresa los datos" textAlignment="CENTER" wrapText="true" />
+            <Label text="Semilla x0" />
+            <TextField fx:id="tf_x0" disable="true" />
+            <Label text="a" />
+            <TextField fx:id="tf_a" disable="true" />
+            <Label text="b" />
+            <TextField fx:id="tf_b" disable="true" />
+            <Label text="c" />
+            <TextField fx:id="tf_c" disable="true" />
+            <Label text="d" />
+            <TextField fx:id="tf_d" disable="true" />
+            <Label text="m" />
+            <TextField fx:id="tf_m" disable="true" />
+            <Button fx:id="btn_generar" mnemonicParsing="false" text="Generar" />
+         </children>
+      </VBox>
+   </left>
+</BorderPane>
