@@ -1,2 +1,0 @@
-# NumerosPseudoaleatorios
-Pinche renato wey
