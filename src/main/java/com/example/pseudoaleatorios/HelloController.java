@@ -29,6 +29,7 @@ public class HelloController {
     @FXML private TextField tf_c;
     @FXML private TextField tf_d;
     @FXML private TextField tf_m;
+    @FXML private TextField tf_n;
     @FXML private Button btn_generar;
 
     // Variable para saber qué generador está seleccionado
@@ -52,10 +53,7 @@ public class HelloController {
         btn_generar.setOnAction(event -> generarNumeros());
     }
 
-    /**
-     * Prepara la interfaz (habilita/deshabilita TextFields) según el generador elegido.
-     * @param generador El nombre del generador seleccionado desde el menú.
-     */
+    // Preparar la interfaz
     private void prepararInterfaz(String generador) {
         generadorSeleccionado = generador;
         tableView.getItems().clear(); // Limpia la tabla de resultados anteriores
@@ -67,12 +65,14 @@ public class HelloController {
         tf_c.setDisable(true);
         tf_d.setDisable(true);
         tf_m.setDisable(true);
+        tf_n.setDisable(true);
 
-        // Luego, habilita solo los necesarios según el método
+        // habilita solo los necesarios para cada caso
         switch (generador) {
             case "Multiplicador Constante":
                 tf_x0.setDisable(false);
                 tf_a.setDisable(false);
+                tf_n.setDisable(false);
                 break;
             case "Cuadrados Medios":
                 tf_x0.setDisable(false);
@@ -96,11 +96,12 @@ public class HelloController {
                 case "Multiplicador Constante":
                     int x0_mc = Integer.parseInt(tf_x0.getText());
                     int a_mc = Integer.parseInt(tf_a.getText());
+                    int n_mc = Integer.parseInt(tf_n.getText());
                     if (String.valueOf(x0_mc).length() != 4 || String.valueOf(a_mc).length() != 4) {
                         mostrarAlerta("Error de Entrada", "La semilla (x0) y la constante (a) deben tener 4 dígitos.");
                         return;
                     }
-                    tableView.setItems(generarMultiplicadorConstante(a_mc, x0_mc, 20)); // Genera 20 números
+                    tableView.setItems(generarMultiplicadorConstante(a_mc, x0_mc, n_mc));
                     break;
 
                 case "Cuadrados Medios":
