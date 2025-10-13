@@ -1,5 +1,7 @@
 package com.example.metodos;
 
 public class ProductosMedios {
-    //El buen belic
+    public static void main(String []args){
+
+    }
 }
