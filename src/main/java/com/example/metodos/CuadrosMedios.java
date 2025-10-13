@@ -1,11 +1,10 @@
 package com.example.metodos;
 public class CuadrosMedios {
-//El buen brayan xd
+//El buen brayan y el renari se quieren
     public static void main(String[] args) {
         int semilla = 5735; // Semilla inicial (debe tener más de 3 dígitos)
         int n = 10; // Cantidad de números aleatorios a generar
 
-        cuadradosMedios(semilla, n);
     }
 
     public static void cuadradosMedios(int y0, int n) {
