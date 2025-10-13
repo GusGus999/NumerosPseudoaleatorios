@@ -1,6 +1,6 @@
 package com.example.metodos;
 public class CuadrosMedios {
-
+//El buen brayan xd
     public static void main(String[] args) {
         int semilla = 5735; // Semilla inicial (debe tener más de 3 dígitos)
         int n = 10; // Cantidad de números aleatorios a generar
