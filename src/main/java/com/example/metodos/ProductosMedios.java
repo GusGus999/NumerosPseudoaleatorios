@@ -3,34 +3,13 @@ package com.example.metodos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/**
- * Implementa el algoritmo de generación de números pseudoaleatorios "Productos Medios".
- * Este método utiliza dos semillas iniciales (X0 y X1) para generar una secuencia.
- */
+
 public class ProductosMedios {
 
-    /**
-     * Representa una fila de resultados para la tabla de la interfaz de usuario.
-     * Un 'record' es una forma moderna y concisa de crear una clase inmutable para almacenar datos.
-     *
-     * @param iteracion El número de la iteración (i).
-     * @param semilla1 La primera semilla usada en la iteración (X_{i-1}).
-     * @param semilla2 La segunda semilla usada en la iteración (X_{i}).
-     * @param producto El resultado de multiplicar semilla1 * semilla2.
-     * @param xn El nuevo número generado (la nueva semilla, X_{i+1}).
-     * @param rn El número pseudoaleatorio normalizado (r_n).
-     */
+
     public record ResultadoProductosMedios(int iteracion, long semilla1, long semilla2, String producto, long xn, double rn) {}
 
-    /**
-     * Genera una lista de números pseudoaleatorios usando el método de productos medios.
-     *
-     * @param semilla0 La primera semilla inicial (X0).
-     * @param semilla1 La segunda semilla inicial (X1).
-     * @param n El número de iteraciones a realizar.
-     * @return Una ObservableList con los resultados de cada iteración.
-     * @throws IllegalArgumentException si las semillas no tienen la misma cantidad de dígitos o si tienen 3 o menos dígitos.
-     */
+
     public ObservableList<ResultadoProductosMedios> generar(long semilla0, long semilla1, int n) throws IllegalArgumentException {
         String s_semilla0 = String.valueOf(semilla0);
         String s_semilla1 = String.valueOf(semilla1);
