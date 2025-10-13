@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
+import com.example.metodos.ProductosMedios;
 public class HelloController {
 
     // --- Vinculación con elementos del Menú ---
@@ -86,6 +86,7 @@ public class HelloController {
             case "Productos Medios":
                 tf_x0.setDisable(false); // Semilla 1
                 tf_a.setDisable(false);  // Semilla 2
+                tf_n.setDisable(false);
                 break;
             case "Congruencial Aditivo":
                 tf_x0.setDisable(false); // Semilla 1
@@ -137,11 +138,32 @@ public class HelloController {
                     tableView.setItems(multiplicadorConstante(a_mc, x0_mc, n_mc));
                     break;
 
+                // Dentro del switch (generadorSeleccionado)
                 case "Productos Medios":
-                    int x0_pm = Integer.parseInt(tf_x0.getText());
-                    int a_pm = Integer.parseInt(tf_a.getText());
+                    // Leer las dos semillas y el número de iteraciones
+                    long semilla1_pm = Long.parseLong(tf_x0.getText());
+                    long semilla2_pm = Long.parseLong(tf_a.getText());
+                    int n_pm = Integer.parseInt(tf_n.getText());
 
+                    // Instanciar la clase con la lógica del método
+                    ProductosMedios generadorPM = new ProductosMedios();
 
+                    // Generar los resultados. Esto puede lanzar una IllegalArgumentException
+                    ObservableList<ProductosMedios.ResultadoProductosMedios> resultadosPM = generadorPM.generar(semilla1_pm, semilla2_pm, n_pm);
+
+                    // Convertir los resultados al formato genérico que usa la tabla (DatoGenerado)
+                    ObservableList<DatoGenerado> datosParaTabla = FXCollections.observableArrayList();
+                    for (ProductosMedios.ResultadoProductosMedios res : resultadosPM) {
+                        datosParaTabla.add(new DatoGenerado(
+                                res.iteracion(),
+                                res.producto(),
+                                String.valueOf(res.xn()),
+                                res.rn()
+                        ));
+                    }
+
+                    // Mostrar los datos en la tabla
+                    tableView.setItems(datosParaTabla);
                     break;
 
                 case "Congruencial Multiplicativo":
@@ -183,8 +205,12 @@ public class HelloController {
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) { // <-- ESTE ES EL CATCH QUE YA TENÍAS
             mostrarAlerta("Error de Entrada", "Por favor, ingrese solo números válidos en los campos.");
+
+        } catch (IllegalArgumentException e) {
+
+            mostrarAlerta("Error de Validación", e.getMessage());
         }
     }
 

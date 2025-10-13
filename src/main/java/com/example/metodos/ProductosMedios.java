@@ -1,98 +1,83 @@
-
 package com.example.metodos;
 
-import javax.swing.*;
-import java.awt.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-
+/**
+ * Implementa el algoritmo de generación de números pseudoaleatorios "Productos Medios".
+ * Este método utiliza dos semillas iniciales (X0 y X1) para generar una secuencia.
+ */
 public class ProductosMedios {
 
-//el buen belic
-    public static void main(String[] args) {
-        // Crea una instancia de la clase y llama al método que inicia el proceso.
-        ProductosMedios generador = new ProductosMedios();
-        generador.iniciar();
-    }
+    /**
+     * Representa una fila de resultados para la tabla de la interfaz de usuario.
+     * Un 'record' es una forma moderna y concisa de crear una clase inmutable para almacenar datos.
+     *
+     * @param iteracion El número de la iteración (i).
+     * @param semilla1 La primera semilla usada en la iteración (X_{i-1}).
+     * @param semilla2 La segunda semilla usada en la iteración (X_{i}).
+     * @param producto El resultado de multiplicar semilla1 * semilla2.
+     * @param xn El nuevo número generado (la nueva semilla, X_{i+1}).
+     * @param rn El número pseudoaleatorio normalizado (r_n).
+     */
+    public record ResultadoProductosMedios(int iteracion, long semilla1, long semilla2, String producto, long xn, double rn) {}
 
+    /**
+     * Genera una lista de números pseudoaleatorios usando el método de productos medios.
+     *
+     * @param semilla0 La primera semilla inicial (X0).
+     * @param semilla1 La segunda semilla inicial (X1).
+     * @param n El número de iteraciones a realizar.
+     * @return Una ObservableList con los resultados de cada iteración.
+     * @throws IllegalArgumentException si las semillas no tienen la misma cantidad de dígitos o si tienen 3 o menos dígitos.
+     */
+    public ObservableList<ResultadoProductosMedios> generar(long semilla0, long semilla1, int n) throws IllegalArgumentException {
+        String s_semilla0 = String.valueOf(semilla0);
+        String s_semilla1 = String.valueOf(semilla1);
 
-    public void iniciar() {
-        long x0, x1;
-        int D, iteraciones;
-
-        try {
-            // --- Paso 1: Obtener y validar las semillas y las iteraciones ---
-            String seed1Str = pedirDato("Introduce la primera semilla (x0):", "Método de Productos Medios");
-            if (seed1Str == null) return; // El usuario canceló
-            x0 = Long.parseLong(seed1Str);
-            if (x0 <= 0) throw new NumberFormatException("La semilla debe ser un número positivo.");
-            D = seed1Str.length();
-
-            String seed2Str = pedirDato("Introduce la segunda semilla (x1):\n(Debe tener " + D + " dígitos)", "Método de Productos Medios");
-            if (seed2Str == null) return; // El usuario canceló
-            if (seed2Str.length() != D) throw new NumberFormatException("La segunda semilla debe tener " + D + " dígitos.");
-            x1 = Long.parseLong(seed2Str);
-
-            String iteracionesStr = pedirDato("Introduce el número de valores a generar (N):", "Método de Productos Medios");
-            if (iteracionesStr == null) return; // El usuario canceló
-            iteraciones = Integer.parseInt(iteracionesStr);
-            if (iteraciones <= 0) throw new NumberFormatException("El número de iteraciones debe ser mayor que cero.");
-
-        } catch (NumberFormatException e) {
-            // Si ocurre cualquier error en la conversión o validación, muestra el mensaje y termina.
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error de entrada", JOptionPane.ERROR_MESSAGE);
-            return;
+        // --- Validación de las entradas ---
+        if (s_semilla0.length() != s_semilla1.length()) {
+            throw new IllegalArgumentException("Las semillas deben tener la misma cantidad de dígitos.");
         }
 
-        // --- Paso 2: Generar los números y construir la tabla de resultados ---
-        generarYMostrarResultados(x0, x1, D, iteraciones);
-    }
+        if (s_semilla0.length() <= 3) {
+            throw new IllegalArgumentException("Las semillas deben tener más de 3 dígitos para evitar una rápida degeneración.");
+        }
 
+        int D = s_semilla0.length(); // Cantidad de dígitos
+        ObservableList<ResultadoProductosMedios> resultados = FXCollections.observableArrayList();
 
-    private String pedirDato(String mensaje, String titulo) {
-        return JOptionPane.showInputDialog(null, mensaje, titulo, JOptionPane.QUESTION_MESSAGE);
-    }
+        long currentSemilla1 = semilla0;
+        long currentSemilla2 = semilla1;
 
+        for (int i = 1; i <= n; i++) {
+            long producto = currentSemilla1 * currentSemilla2;
+            String s_producto = String.valueOf(producto);
 
-
-    private void generarYMostrarResultados(long x0, long x1, int D, int N) {
-        StringBuilder resultados = new StringBuilder();
-        resultados.append(String.format("%-5s | %-10s | %-10s | %-18s | %-10s | %-10s\n",
-                "y(i)", "n1", "n2", "Resultado (n1*n2)", "x(i)", "r(i)"));
-        resultados.append(new String(new char[80]).replace('\0', '-')).append("\n");
-
-        long current_x0 = x0;
-        long current_x1 = x1;
-        double divisor = Math.pow(10, D);
-
-        for (int i = 0; i < N; i++) {
-            long producto = current_x0 * current_x1;
-            String productoStr = String.valueOf(producto);
-
-            int longitudDeseada = 2 * D;
-            while (productoStr.length() < longitudDeseada) {
-                productoStr = "0" + productoStr;
+            // Aseguramos que la longitud del producto sea par para poder extraer el centro correctamente.
+            // Si es impar, se añade un '0' a la izquierda.
+            if (s_producto.length() % 2 != 0) {
+                s_producto = "0" + s_producto;
             }
 
-            int startIndex = (productoStr.length() - D) / 2;
-            String x_str = productoStr.substring(startIndex, startIndex + D);
-            long nuevo_x = Long.parseLong(x_str);
-            double r_i = nuevo_x / divisor;
+            int len = s_producto.length();
+            int startIndex = (len - D) / 2;
 
-            resultados.append(String.format("%-5s | %-10d | %-10d | %-18d | %-10d | %-10.4f\n",
-                    "y" + i, current_x0, current_x1, producto, nuevo_x, r_i));
+            // Extraer los D dígitos del centro
+            String s_nuevaSemilla = s_producto.substring(startIndex, startIndex + D);
+            long nuevaSemilla = Long.parseLong(s_nuevaSemilla);
 
-            current_x0 = current_x1;
-            current_x1 = nuevo_x;
+            // Calcular el número aleatorio r_n
+            double rn = nuevaSemilla / Math.pow(10, D);
+
+            // Guardar el resultado de la iteración
+            resultados.add(new ResultadoProductosMedios(i, currentSemilla1, currentSemilla2, String.valueOf(producto), nuevaSemilla, rn));
+
+            // Actualizar las semillas para la siguiente iteración
+            currentSemilla1 = currentSemilla2;
+            currentSemilla2 = nuevaSemilla;
         }
 
-        // Muestra los resultados en un JTextArea con Scroll
-        JTextArea textArea = new JTextArea(resultados.toString());
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setEditable(false);
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(650, 400));
-
-        JOptionPane.showMessageDialog(null, scrollPane, "Resultados del Método de Productos Medios", JOptionPane.INFORMATION_MESSAGE);
+        return resultados;
     }
 }
