@@ -1,31 +1,20 @@
-// Declaración del paquete que coincide con tu estructura de carpetas
+
 package com.example.metodos;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Implementación del método de Productos Medios para generar números pseudoaleatorios.
- * La lógica se puede iniciar llamando al método iniciar().
- *
- * @author Gemini & BrayanGGX
- */
+
 public class ProductosMedios {
 
-    /**
-     * Método principal que sirve como punto de entrada para probar esta clase de forma independiente.
-     */
+
     public static void main(String[] args) {
         // Crea una instancia de la clase y llama al método que inicia el proceso.
         ProductosMedios generador = new ProductosMedios();
         generador.iniciar();
     }
 
-    /**
-     * Inicia el proceso de solicitud de datos al usuario y generación de números.
-     * Este método no es estático, por lo que puede ser llamado desde un objeto.
-     * Ejemplo: new ProductosMedios().iniciar();
-     */
+
     public void iniciar() {
         long x0, x1;
         int D, iteraciones;
@@ -58,24 +47,13 @@ public class ProductosMedios {
         generarYMostrarResultados(x0, x1, D, iteraciones);
     }
 
-    /**
-     * Muestra un diálogo para pedir un dato al usuario.
-     * @param mensaje El mensaje a mostrar en el diálogo.
-     * @param titulo El título de la ventana del diálogo.
-     * @return El String introducido por el usuario, o null si cancela.
-     */
+
     private String pedirDato(String mensaje, String titulo) {
         return JOptionPane.showInputDialog(null, mensaje, titulo, JOptionPane.QUESTION_MESSAGE);
     }
 
 
-    /**
-     * Realiza el algoritmo de productos medios y muestra los resultados en una ventana.
-     * @param x0 Semilla inicial 1.
-     * @param x1 Semilla inicial 2.
-     * @param D Número de dígitos de las semillas.
-     * @param N Número de iteraciones a realizar.
-     */
+
     private void generarYMostrarResultados(long x0, long x1, int D, int N) {
         StringBuilder resultados = new StringBuilder();
         resultados.append(String.format("%-5s | %-10s | %-10s | %-18s | %-10s | %-10s\n",
