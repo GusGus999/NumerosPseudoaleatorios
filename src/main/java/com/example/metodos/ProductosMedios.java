@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class ProductosMedios {
 
-
+//el buen belic
     public static void main(String[] args) {
         // Crea una instancia de la clase y llama al método que inicia el proceso.
         ProductosMedios generador = new ProductosMedios();
