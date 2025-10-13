@@ -202,6 +202,61 @@ public class HelloController {
 
                     tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
                     break;
+
+                case "Congruencial Aditivo":
+                    String semillasTexto = tf_x0.getText();  // ejemplo: "65,89,98,3,69"
+                    int m_ca = Integer.parseInt(tf_m.getText());
+                    int n_ca = Integer.parseInt(tf_n.getText());
+                    int cantidadTotal = 15; // cantidad fija de números a generar
+
+                    // Validar datos
+                    if (!validarCongruencialAditivo(semillasTexto, tf_m.getText(), tf_n.getText())) {
+                        return;
+                    }
+
+                    // Generar y mostrar resultados
+                    tableView.setItems(congruencialAditivo(semillasTexto, m_ca, n_ca, cantidadTotal));
+                    break;
+
+                case "Congruencial Lineal":
+                    try {
+                        int a_cl = Integer.parseInt(tf_a.getText());
+                        int c_cl = Integer.parseInt(tf_c.getText());
+                        int m_cl = Integer.parseInt(tf_m.getText());
+                        int x0_cl = Integer.parseInt(tf_x0.getText());
+                        int n_cl = Integer.parseInt(tf_n.getText());
+
+                        // --- Validaciones de entrada ---
+                        if (a_cl <= 0 || c_cl < 0 || m_cl <= 0 || x0_cl < 0 || n_cl <= 0) {
+                            mostrarAlerta("Error de Entrada", "Todos los valores deben ser positivos y mayores que cero.");
+                            return;
+                        }
+
+                        // --- Validaciones teóricas ---
+                        if (!sonPrimosRelativos(c_cl, m_cl)) {
+                            mostrarAlerta("Error de Validación", "c y m no son primos relativos.");
+                            return;
+                        }
+
+                        if (!aMenosUnoMultiploFactoresPrimosDeM(a_cl, m_cl)) {
+                            mostrarAlerta("Error de Validación", "a - 1 no es múltiplo de todos los factores primos de m.");
+                            return;
+                        }
+
+                        if (m_cl % 4 == 0 && (a_cl - 1) % 4 != 0) {
+                            mostrarAlerta("Error de Validación", "Si m es múltiplo de 4, (a - 1) debe ser divisible entre 4.");
+                            return;
+                        }
+
+                        // --- Generar los números pseudoaleatorios ---
+                        tableView.setItems(congruencialLineal(a_cl, c_cl, m_cl, x0_cl, n_cl));
+
+                    } catch (NumberFormatException e) {
+                        mostrarAlerta("Error de Entrada", "Por favor ingrese solo números válidos en los campos.");
+                    }
+                    break;
+
+
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
             }
@@ -232,6 +287,20 @@ public class HelloController {
         return datos;
     }
 
+
+    // --- Método Congruencial Lineal ---
+    private ObservableList<DatoGenerado> congruencialLineal(int a, int c, int m, int x0, int n) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+
+        int xi = x0;
+        for (int i = 0; i < n; i++) {
+            double ri = (double) xi / m;
+            datos.add(new DatoGenerado(i, String.valueOf(xi), "", ri)); // No hay producto intermedio como en otros métodos
+            xi = (a * xi + c) % m;
+        }
+
+        return datos;
+    }
 
     // --- Metodo de multiplicador constante ---
     private ObservableList<DatoGenerado> multiplicadorConstante(int a, int x0, int n) {
@@ -288,6 +357,74 @@ public class HelloController {
         return datos;
     }
 
+    // --- VALIDACIÓN DEL MÉTODO CONGRUENCIAL ADITIVO ---
+    private boolean validarCongruencialAditivo(String semillasTexto, String tf_m, String tf_n) {
+        try {
+            // Validar m
+            int m = Integer.parseInt(tf_m);
+            if (m <= 0) {
+                mostrarAlerta("Error de Entrada", "El valor de m debe ser mayor que 0.");
+                return false;
+            }
+
+            // Validar n
+            int n = Integer.parseInt(tf_n);
+            if (n <= 1) {
+                mostrarAlerta("Error de Entrada", "Debe haber al menos 2 semillas iniciales.");
+                return false;
+            }
+
+            // Validar semillas (esperadas separadas por comas)
+            String[] partes = semillasTexto.split(",");
+            if (partes.length < n) {
+                mostrarAlerta("Error de Entrada", "Debe ingresar al menos " + n + " semillas separadas por comas.");
+                return false;
+            }
+
+            for (String s : partes) {
+                int valor = Integer.parseInt(s.trim());
+                if (valor < 0 || valor >= m) {
+                    mostrarAlerta("Error de Entrada", "Cada semilla debe estar entre 0 y " + (m - 1));
+                    return false;
+                }
+            }
+
+            return true; // ✅ todo bien
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error de Entrada", "Ingrese solo números válidos para m, n y las semillas.");
+            return false;
+        }
+    }
+
+    // --- MÉTODO CONGRUENCIAL ADITIVO ---
+    private ObservableList<DatoGenerado> congruencialAditivo(String semillasTexto, int m, int n, int cantidadTotal) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+
+        // Convertir las semillas desde el texto (ej: "65,89,98,3,69")
+        String[] partes = semillasTexto.split(",");
+        int[] xi = new int[cantidadTotal];
+
+        // Cargar las semillas iniciales
+        for (int i = 0; i < n; i++) {
+            xi[i] = Integer.parseInt(partes[i].trim());
+        }
+
+        int totalGenerados = cantidadTotal - n;
+
+        // Generar nuevos xi
+        for (int i = n, iter = 0; i < cantidadTotal; i++, iter++) {
+            int nuevoXi = (xi[i - n] + xi[i - 1]) % m;
+            xi[i] = nuevoXi;
+            double ri = (double) nuevoXi / (m - 1);
+
+            // Guardar en la tabla (iter empieza en 0 para x₆)
+            datos.add(new DatoGenerado(iter + 1, (xi[i - n] + " + " + xi[i - 1] + " mod " + m), String.valueOf(nuevoXi), ri));
+        }
+
+        return datos;
+    }
+
     // --- Alertas ---
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -310,4 +447,36 @@ public class HelloController {
         }
         return a;
     }
+
+    private boolean aMenosUnoMultiploFactoresPrimosDeM(int a, int m) {
+        int[] primos = factoresPrimos(m);
+        for (int p : primos) {
+            if ((a - 1) % p != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int[] factoresPrimos(int num) {
+        java.util.Set<Integer> factores = new java.util.HashSet<>();
+        int n = num;
+        for (int i = 2; i <= n / i; i++) {
+            while (n % i == 0) {
+                factores.add(i);
+                n /= i;
+            }
+        }
+        if (n > 1) {
+            factores.add(n);
+        }
+        int[] res = new int[factores.size()];
+        int idx = 0;
+        for (int f : factores) {
+            res[idx++] = f;
+        }
+        return res;
+    }
+
+
 }
