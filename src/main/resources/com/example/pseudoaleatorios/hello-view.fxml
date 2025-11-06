@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pseudoaleatorios.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pseudoaleatorios.HelloController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -21,7 +21,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Pruebas Estdisticas">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Uniformidad" />
+                  <MenuItem fx:id="mi_uniformidad" mnemonicParsing="false" text="Uniformidad" />
               <MenuItem mnemonicParsing="false" text="Aleatoriedad" />
                   <MenuItem mnemonicParsing="false" text="Compresibilidad" />
             </items>
@@ -41,12 +41,12 @@
       </MenuBar>
    </top>
    <center>
-      <TableView fx:id="tableView" prefHeight="200.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tableView" prefHeight="548.0" prefWidth="500.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="tc_n" minWidth="30.0" prefWidth="75.0" text="n" />
-            <TableColumn fx:id="tc_yn" minWidth="200.0" prefWidth="75.0" text="Yn" />
-          <TableColumn fx:id="tc_xn" minWidth="200.0" prefWidth="75.0" text="Xn" />
-          <TableColumn fx:id="tc_rn" minWidth="200.0" prefWidth="75.0" text="Rn" />
+            <TableColumn fx:id="tc_yn" minWidth="150.0" prefWidth="75.0" text="Yn" />
+          <TableColumn fx:id="tc_xn" minWidth="150.0" prefWidth="75.0" text="Xn" />
+          <TableColumn fx:id="tc_rn" minWidth="150.0" prefWidth="75.0" text="Rn" />
         </columns>
          <padding>
             <Insets left="5.0" right="5.0" top="5.0" />
@@ -78,4 +78,29 @@
          </padding>
       </VBox>
    </left>
+   <right>
+      <VBox alignment="TOP_CENTER" prefHeight="548.0" prefWidth="206.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Definir numero de intervalos" wrapText="true" />
+            <Separator prefWidth="200.0" />
+            <Label fx:id="lbl_intervalo" prefHeight="75.0" prefWidth="150.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Contar frecuencias en cada intervalo" textAlignment="CENTER" wrapText="true" />
+            <Separator prefWidth="200.0" />
+            <Label fx:id="lbl_frecuencia" prefHeight="75.0" prefWidth="150.0" />
+            <Label text="Calcular estadistico chi-cuadrado" textAlignment="CENTER" wrapText="true" />
+            <Separator prefWidth="200.0" />
+            <Label fx:id="lbl_estadistico" prefHeight="75.0" prefWidth="150.0" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="5.0" right="5.0" top="20.0" />
+         </padding>
+      </VBox>
+   </right>
+   <bottom>
+      <Separator prefWidth="200.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </Separator>
+   </bottom>
 </BorderPane>

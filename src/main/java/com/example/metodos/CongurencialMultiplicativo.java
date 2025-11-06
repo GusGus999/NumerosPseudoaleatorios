@@ -6,12 +6,8 @@ public class CongurencialMultiplicativo {
         // X0  semilla
         int x0 = 5; //Numero entero impar primo relativo con m
 
-        // d
         int d = 5;
-
         int m = (int) Math.pow(2, d); //d>3
-
-        // t cualquier entero
         int t = 1;
         int a = 8 * t - 3;
 

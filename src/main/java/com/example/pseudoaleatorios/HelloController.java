@@ -7,6 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import com.example.metodos.ProductosMedios;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class HelloController {
 
     // --- Vinculación con elementos del Menú ---
@@ -17,13 +21,15 @@ public class HelloController {
     @FXML private MenuItem mi_multiplicativo;
     @FXML private MenuItem mi_lineal;
     @FXML private MenuItem mi_cuadratico;
+    @FXML private MenuItem mi_uniformidad;
+
 
     // --- Vinculación con la Tabla y sus Columnas ---
     @FXML private TableView<DatoGenerado> tableView;
     @FXML private TableColumn<DatoGenerado, Integer> tc_n;
     @FXML private TableColumn<DatoGenerado, String> tc_yn;
     @FXML private TableColumn<DatoGenerado, String> tc_xn;
-    @FXML private TableColumn<DatoGenerado, Double> tc_rn;
+    @FXML private TableColumn<DatoGenerado, String> tc_rn;
 
     // --- Vinculación con los Campos de Texto y Botón ---
     @FXML private TextField tf_x0;
@@ -33,10 +39,17 @@ public class HelloController {
     @FXML private TextField tf_d;
     @FXML private TextField tf_m;
     @FXML private TextField tf_n;
+
+    @FXML private Label lbl_intervalo;
+    @FXML private Label lbl_frecuencia;
+    @FXML private Label lbl_estadistico;
+
     @FXML private Button btn_generar;
 
     // Variable para saber qué generador está seleccionado
     private String generadorSeleccionado = "";
+    // Lista para guardar los numeros generados
+    //private List<Double> numerosGenerados;
 
     @FXML
     public void initialize() {
@@ -53,6 +66,7 @@ public class HelloController {
         mi_multiplicativo.setOnAction(event -> prepararInterfaz("Congruencial Multiplicativo"));
         mi_lineal.setOnAction(event -> prepararInterfaz("Congruencial Lineal"));
         mi_cuadratico.setOnAction(event -> prepararInterfaz("Congruencial Cuadratico"));
+        mi_uniformidad.setOnAction(event -> prepararInterfaz("Uniformidad"));
 
         // Asignar la acción principal al botón "Generar"
         btn_generar.setOnAction(event -> generarNumeros());
@@ -94,6 +108,8 @@ public class HelloController {
                 tf_b.setDisable(false);  // Semilla 3
                 tf_c.setDisable(false);  // Semilla 4
                 tf_d.setDisable(false);  // Semilla 5
+                tf_m.setDisable(false);  // Módulo
+                tf_n.setDisable(false);
                 break;
             case "Congruencial Multiplicativo":
                 tf_x0.setDisable(false);
@@ -102,6 +118,11 @@ public class HelloController {
                 tf_d.setDisable(false);
                 break;
             case "Congruencial Lineal":
+                tf_x0.setDisable(false); // Semilla (X₀)
+                tf_a.setDisable(false);  // Constante multiplicativa (a)
+                tf_c.setDisable(false);  // Constante aditiva (c)
+                tf_m.setDisable(false);  // Módulo (m)
+                tf_n.setDisable(false);
                 break;
             case "Congruencial Cuadratico":
                 tf_x0.setDisable(false);
@@ -110,6 +131,12 @@ public class HelloController {
                 tf_c.setDisable(false);
                 tf_d.setDisable(false);
                 break;
+            case "Uniformidad":
+                lbl_intervalo.setText("k: ");
+                lbl_frecuencia.setText("Frecuencia: ");
+                lbl_estadistico.setText("Valor critico: ");
+                break;
+
         }
     }
 
@@ -119,11 +146,10 @@ public class HelloController {
                 case "Cuadrados Medios":
                     int x0_cm = Integer.parseInt(tf_x0.getText());
                     int n_cm = Integer.parseInt(tf_n.getText());
-                    if (String.valueOf(x0_cm).length() != 4 || String.valueOf(n_cm).length() > 1) {
+                    if (String.valueOf(x0_cm).length() != 4) {
                         mostrarAlerta("Error de Entrada", "La semilla (x0) debe tener 4 dígitos.");
                         return;
                     }
-
                     tableView.setItems(cuadradosMedios(x0_cm, n_cm));
                     break;
 
@@ -141,52 +167,82 @@ public class HelloController {
                 // Dentro del switch (generadorSeleccionado)
                 case "Productos Medios":
                     // Leer las dos semillas y el número de iteraciones
-                    long semilla1_pm = Long.parseLong(tf_x0.getText());
-                    long semilla2_pm = Long.parseLong(tf_a.getText());
+                    int semilla1_pm = Integer.parseInt(tf_x0.getText());
+                    int semilla2_pm = Integer.parseInt(tf_a.getText());
                     int n_pm = Integer.parseInt(tf_n.getText());
 
-                    // Instanciar la clase con la lógica del método
-                    ProductosMedios generadorPM = new ProductosMedios();
-
-                    // Generar los resultados. Esto puede lanzar una IllegalArgumentException
-                    ObservableList<ProductosMedios.ResultadoProductosMedios> resultadosPM = generadorPM.generar(semilla1_pm, semilla2_pm, n_pm);
-
-                    // Convertir los resultados al formato genérico que usa la tabla (DatoGenerado)
-                    ObservableList<DatoGenerado> datosParaTabla = FXCollections.observableArrayList();
-                    for (ProductosMedios.ResultadoProductosMedios res : resultadosPM) {
-                        datosParaTabla.add(new DatoGenerado(
-                                res.iteracion(),
-                                res.producto(),
-                                String.valueOf(res.xn()),
-                                res.rn()
-                        ));
-                    }
-
-                    // Mostrar los datos en la tabla
-                    tableView.setItems(datosParaTabla);
-                    break;
-
-                case "Congruencial Multiplicativo":
-                    int x0_cmm = Integer.parseInt(tf_x0.getText());
-                    int a_cmm = Integer.parseInt(tf_a.getText());
-                    int n_cmm = Integer.parseInt(tf_n.getText());
-                    int d_cmm = Integer.parseInt(tf_d.getText());
-                    int m_cmm = (int) Math.pow(2, d_cmm);
-
-                    if (String.valueOf(x0_cmm).length() > 1 || String.valueOf(a_cmm).length() > 1 || String.valueOf(n_cmm).length() > 1 ||String.valueOf(d_cmm).length() > 1) {
+                    if (String.valueOf(semilla1_pm).length() != 4 || String.valueOf(semilla2_pm).length() != 4) {
                         mostrarAlerta("Error de Entrada", "La semilla (x0) y la constante (a) deben tener 4 dígitos.");
                         return;
                     }
 
-                    // Verificar que a y m sean primos relativos
-                    if (!sonPrimosRelativos(a_cmm, m_cmm)) {
-                        mostrarAlerta("Error de Entrada", "a y m no son primos relativos");
+                    tableView.setItems(productosMedios(semilla1_pm, semilla2_pm,n_pm));
+                    break;
+
+                case "Congruencial Aditivo":
+                    List<Integer> semillas = new ArrayList<>();
+                    semillas.add(Integer.parseInt(tf_x0.getText()));
+                    semillas.add(Integer.parseInt(tf_a.getText()));
+                    semillas.add(Integer.parseInt(tf_b.getText()));
+                    semillas.add(Integer.parseInt(tf_c.getText()));
+                    semillas.add(Integer.parseInt(tf_d.getText()));
+                    int m_ca = Integer.parseInt(tf_m.getText());
+                    int n_ca = Integer.parseInt(tf_n.getText());
+
+                    // Validación: n debe ser mayor o igual al número de semillas
+                    if (n_ca < semillas.size()) {
+                        mostrarAlerta("Error de Validación", "La cantidad de números a generar (n) no puede ser menor que la cantidad de semillas (" + semillas.size() + ").");
+                        return;
                     }
 
+                    tableView.setItems(congruencialAditivo(semillas, m_ca, n_ca +5));
+                    break;
+
+                case "Congruencial Multiplicativo":
+                    if (tf_x0.getText().trim().isEmpty() || tf_a.getText().trim().isEmpty() ||
+                            tf_n.getText().trim().isEmpty() || tf_d.getText().trim().isEmpty()) {
+                        mostrarAlerta("Atencion", "Por favor, rellena todos los campos antes de continuar");
+                        return;
+                    }
+
+                    int x0_cmm = Integer.parseInt(tf_x0.getText());
+                    int n_cmm = Integer.parseInt(tf_n.getText());
+                    int d_cmm = Integer.parseInt(tf_d.getText());
+                    int t_cmm = Integer.parseInt(tf_a.getText());
+
+                    int a_cmm = 8 * t_cmm - 3;
+                    int m_cmm = (int) Math.pow(2, d_cmm);
+
+                    // Verificar que a y m sean primos relativos
+                    if (!sonPrimosRelativos(a_cmm, m_cmm))
+                        mostrarAlerta("Error de Entrada", "a y m no son primos relativos");
                     tableView.setItems(congruencialMultiplicativo(a_cmm, n_cmm, x0_cmm, m_cmm));
                     break;
 
+                case "Congruencial Lineal":
+                    int x0_cl = Integer.parseInt(tf_x0.getText());
+                    int a_cl = Integer.parseInt(tf_a.getText());
+                    int c_cl = Integer.parseInt(tf_c.getText());
+                    int m_cl = Integer.parseInt(tf_m.getText());
+                    int n_cl = Integer.parseInt(tf_n.getText());
+
+                    // Validación: c y m deben ser primos relativos
+                    if (mcd(c_cl, m_cl) != 1) {
+                        mostrarAlerta("Error de Validación", "La constante aditiva 'c' (" + c_cl + ") y el módulo 'm' (" + m_cl + ") deben ser primos relativos.");
+                        return; // Detiene la ejecución si no cumplen
+                    }
+
+                    tableView.setItems(congruencialLineal(x0_cl, a_cl, c_cl, m_cl, n_cl));
+                    break;
+
                 case "Congruencial Cuadratico":
+                    if (tf_x0.getText().trim().isEmpty() || tf_a.getText().trim().isEmpty() ||
+                            tf_b.getText().trim().isEmpty() || tf_c.getText().trim().isEmpty() ||
+                            tf_d.getText().trim().isEmpty()) {
+                        mostrarAlerta("Atencion", "Por favor, rellena todos los campos antes de continuar");
+                        return;
+                    }
+
                     int x0_cc = Integer.parseInt(tf_x0.getText());
                     int a_cc = Integer.parseInt(tf_a.getText());
                     int b_cc = Integer.parseInt(tf_b.getText());
@@ -195,21 +251,21 @@ public class HelloController {
                     int m_cc = (int) Math.pow(2,10);
                     tf_m.setText(String.valueOf(m_cc));
 
-                    if (String.valueOf(x0_cc).length() > 1 || String.valueOf(a_cc).length() > 1 || String.valueOf(b_cc).length() > 1 ||String.valueOf(c_cc).length() > 1 || String.valueOf(d_cc).length() > 1) {
-                        mostrarAlerta("Error de Entrada", "La semilla (x0) y la constante (a) deben tener 4 dígitos.");
-                        return;
-                    }
-
                     tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
                     break;
+                case "Uniformidad":
+                    lbl_intervalo.setText("k: ");
+                    lbl_frecuencia.setText("Frecuencia: ");
+                    lbl_estadistico.setText("Valor critico: ");
+                    break;
+
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
             }
-        } catch (NumberFormatException e) { // <-- ESTE ES EL CATCH QUE YA TENÍAS
+        } catch (NumberFormatException e) {
             mostrarAlerta("Error de Entrada", "Por favor, ingrese solo números válidos en los campos.");
 
         } catch (IllegalArgumentException e) {
-
             mostrarAlerta("Error de Validación", e.getMessage());
         }
     }
@@ -226,7 +282,7 @@ public class HelloController {
             int xi = Integer.parseInt(yiCuadradoStr.substring(2, 6));
             double ri = xi / 10000.0;
 
-            datos.add(new DatoGenerado(i, yiCuadradoStr, String.valueOf(xi), ri));
+            datos.add(new DatoGenerado(i, yiCuadradoStr, String.valueOf(xi), formatear(ri)));
             yi = xi;
         }
         return datos;
@@ -248,10 +304,56 @@ public class HelloController {
             int siguiente = Integer.parseInt(digitosCentrales);
             double ri = (double) siguiente / 10000;
 
-            datos.add(new DatoGenerado(i, productoStr, digitosCentrales, ri));
+            datos.add(new DatoGenerado(i, productoStr, digitosCentrales, formatear(ri)));
             xi = siguiente;
         }
         return datos;
+    }
+
+    // --- Productos Medios ---
+    private ObservableList<DatoGenerado> productosMedios(int x0, int x1, int n) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+        int xi = x0;
+        int xi1 = x1;
+
+        for (int i = 0; i < n; i++) {
+            long producto = (long) xi * xi1; // Multiplicar las dos semillas
+            String productoStr = String.format("%08d", producto); // Asegurar 8 dígitos
+
+            // Extraer los 4 dígitos centrales
+            int inicio = (productoStr.length() - 4) / 2;
+            String digitosCentrales = productoStr.substring(inicio, inicio + 4);
+
+            int siguiente = Integer.parseInt(digitosCentrales);
+            double ri = (double) siguiente / 10000;
+
+            // Añadir el resultado a la lista (mostrando el producto de xi * xi+1)
+            datos.add(new DatoGenerado(i, productoStr, digitosCentrales, formatear(ri)));
+
+            // Actualizar las semillas para la siguiente iteración
+            xi = xi1;
+            xi1 = siguiente;
+        }
+        return datos;
+    }
+
+    // --- Congruencial aditivo
+    public ObservableList<DatoGenerado> congruencialAditivo(List<Integer> semillas, int m, int n) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+        List<Integer> secuenciaXi = new ArrayList<>(semillas);
+
+        // Luego, generamos los números restantes a partir de las semillas
+        for (int i = semillas.size(); i < n; i++) {
+            // Se aplica la fórmula específica: X_i = (X_{i-1} + X_{i-5}) mod m
+            int nuevoXi = (secuenciaXi.get(i - 1) + secuenciaXi.get(i - 5)) % m;
+            secuenciaXi.add(nuevoXi); // Se añade el nuevo valor a la secuencia para cálculos futuros
+
+            double ri = (double) nuevoXi / m;
+            String operacion = String.format("(%d + %d) mod %d", secuenciaXi.get(i-5), secuenciaXi.get(i-1), m);
+            datos.add(new DatoGenerado(i + 1, operacion, String.valueOf(nuevoXi), formatear(ri)));
+        }
+
+    return datos;
     }
 
     // --- Congruencial multiplicativo ---
@@ -264,9 +366,32 @@ public class HelloController {
             xi = (a * xi) % m;
             double ri = (double) xi / m;
 
-            datos.add(new DatoGenerado(i, "", String.valueOf(xi), ri));
+            datos.add(new DatoGenerado(i, "", String.valueOf(xi), formatear(ri)));
         }
         return datos;
+    }
+
+    // Congruencial Lineal
+    public ObservableList<DatoGenerado> congruencialLineal(int x0, int a, int c, int m, int n) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+        int xi = x0;
+
+        for (int i = 1; i <= n; i++) {
+            // Se calcula el siguiente valor de la secuencia
+            int siguiente_xi = (a * xi + c) % m;
+
+            // Se calcula el número pseudoaleatorio r_i con el valor actual de xi
+            double ri = (double) xi / m;
+
+            // Se añade el resultado a la lista (usando el valor xi de esta iteración)
+            // Para la columna 'Yn' (operación) podemos mostrar la fórmula para claridad
+            String operacion = String.format("(%d * %d + %d) mod %d", a, xi, c, m);
+            datos.add(new DatoGenerado(i, "", String.valueOf(siguiente_xi), formatear(ri)));
+
+            // Se actualiza xi para la siguiente iteración
+            xi = siguiente_xi;
+        }
+    return datos;
     }
 
 
@@ -281,11 +406,17 @@ public class HelloController {
             int siguiente = (int) (operacion % m);
             double ri = (double) siguiente / m;
 
-            datos.add(new DatoGenerado(i, String.valueOf(xi), String.valueOf(siguiente), ri));
+            //numerosGenerados.add(ri);
+            datos.add(new DatoGenerado(i, String.valueOf(xi), String.valueOf(siguiente), formatear(ri)));
 
             xi = siguiente; // Actualizar xi para la siguiente iteración
         }
         return datos;
+    }
+
+    // --- Pruebas Estadisticas ---
+    private void uniformidad(){
+
     }
 
     // --- Alertas ---
@@ -309,5 +440,17 @@ public class HelloController {
             a = temp;
         }
         return a;
+    }
+
+    public static String formatear(double numero) {
+        return String.format("%.4f", numero);
+    }
+
+    public static String formatear(long numero) {
+        return String.valueOf(numero);
+    }
+
+    public static String formatear(int numero) {
+        return String.valueOf(numero);
     }
 }
