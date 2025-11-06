@@ -145,25 +145,6 @@ public class HelloController {
                     long semilla2_pm = Long.parseLong(tf_a.getText());
                     int n_pm = Integer.parseInt(tf_n.getText());
 
-                    // Instanciar la clase con la lógica del método
-                    ProductosMedios generadorPM = new ProductosMedios();
-
-                    // Generar los resultados. Esto puede lanzar una IllegalArgumentException
-                    ObservableList<ProductosMedios.ResultadoProductosMedios> resultadosPM = generadorPM.generar(semilla1_pm, semilla2_pm, n_pm);
-
-                    // Convertir los resultados al formato genérico que usa la tabla (DatoGenerado)
-                    ObservableList<DatoGenerado> datosParaTabla = FXCollections.observableArrayList();
-                    for (ProductosMedios.ResultadoProductosMedios res : resultadosPM) {
-                        datosParaTabla.add(new DatoGenerado(
-                                res.iteracion(),
-                                res.producto(),
-                                String.valueOf(res.xn()),
-                                res.rn()
-                        ));
-                    }
-
-                    // Mostrar los datos en la tabla
-                    tableView.setItems(datosParaTabla);
                     break;
 
                 case "Congruencial Multiplicativo":
@@ -226,7 +207,7 @@ public class HelloController {
             int xi = Integer.parseInt(yiCuadradoStr.substring(2, 6));
             double ri = xi / 10000.0;
 
-            datos.add(new DatoGenerado(i, yiCuadradoStr, String.valueOf(xi), ri));
+            datos.add(new DatoGenerado(i, yiCuadradoStr, String.valueOf(xi), String.valueOf(ri)));
             yi = xi;
         }
         return datos;
@@ -248,7 +229,7 @@ public class HelloController {
             int siguiente = Integer.parseInt(digitosCentrales);
             double ri = (double) siguiente / 10000;
 
-            datos.add(new DatoGenerado(i, productoStr, digitosCentrales, ri));
+            datos.add(new DatoGenerado(i, productoStr, digitosCentrales, String.valueOf(ri)));
             xi = siguiente;
         }
         return datos;
@@ -264,7 +245,7 @@ public class HelloController {
             xi = (a * xi) % m;
             double ri = (double) xi / m;
 
-            datos.add(new DatoGenerado(i, "", String.valueOf(xi), ri));
+            datos.add(new DatoGenerado(i, "", String.valueOf(xi), String.valueOf(ri)));
         }
         return datos;
     }
@@ -281,7 +262,7 @@ public class HelloController {
             int siguiente = (int) (operacion % m);
             double ri = (double) siguiente / m;
 
-            datos.add(new DatoGenerado(i, String.valueOf(xi), String.valueOf(siguiente), ri));
+            datos.add(new DatoGenerado(i, String.valueOf(xi), String.valueOf(siguiente), String.valueOf(ri)));
 
             xi = siguiente; // Actualizar xi para la siguiente iteración
         }
