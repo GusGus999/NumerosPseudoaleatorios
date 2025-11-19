@@ -3,10 +3,10 @@ package com.example.metodos;
 import java.util.*;
 public class CongruencialLineal {
     public static void main(String[] args) {
-        int a = 21;
-        int c = 13;
-        int m = 100;
-        int xPrev = 10;
+        int a = 16807;
+        int c = 0;
+        int m = 2147483647;
+        int xPrev = 1;
 
         if (!sonPrimosRelativos(c, m)) {
             System.out.println("Error: c y m no son primos relativos.");
