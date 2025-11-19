@@ -183,6 +183,7 @@ public class HelloController {
 
                     tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
                     break;
+
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
             }
@@ -290,5 +291,28 @@ public class HelloController {
             a = temp;
         }
         return a;
+    }
+    // Nuevo metodo para generar variables aleatorias
+    public ObservableList<DatoGenerado> generarExponencial(ObservableList<DatoGenerado> datosUniforme, double lambda) {
+        ObservableList<DatoGenerado> datosExponencial = FXCollections.observableArrayList();
+
+        for (DatoGenerado dato : datosUniforme) {
+            // 1. Obtener el número pseudoaleatorio R_i
+            double ri = Double.parseDouble(dato.getRn());
+
+            // 2. Aplicar la Transformada Inversa
+            double xi = (-1.0 / lambda) * Math.log(1.0 - ri);
+
+            // 3. Crear un nuevo objeto DatoGenerado para mostrar el resultado
+            // Reutilizamos los campos, por ejemplo, guardando el R_i en 'yn'
+            // y el X_i (variable exponencial) en 'rn'
+            datosExponencial.add(new DatoGenerado(
+                    dato.getN(),
+                    String.format("%.4f", ri), // R_i original (uniforme)
+                    "", // Campo no usado
+                    String.format("%.4f", xi) // X_i transformado (exponencial)
+            ));
+        }
+        return datosExponencial;
     }
 }
