@@ -119,7 +119,7 @@ public class HelloController {
                 case "Cuadrados Medios":
                     int x0_cm = Integer.parseInt(tf_x0.getText());
                     int n_cm = Integer.parseInt(tf_n.getText());
-                    if (String.valueOf(x0_cm).length() != 4 || String.valueOf(n_cm).length() > 1) {
+                    if (String.valueOf(x0_cm).length() != 4 || String.valueOf(n_cm).length() > 3) {
                         mostrarAlerta("Error de Entrada", "La semilla (x0) debe tener 4 dígitos.");
                         return;
                     }
