@@ -17,6 +17,10 @@ public class HelloController {
     @FXML private MenuItem mi_multiplicativo;
     @FXML private MenuItem mi_lineal;
     @FXML private MenuItem mi_cuadratico;
+    @FXML private MenuItem mi_transformadaInversa;
+    @FXML private MenuItem mi_convolucion;
+    @FXML private MenuItem mi_composicion;
+
 
     // --- Vinculación con la Tabla y sus Columnas ---
     @FXML private TableView<DatoGenerado> tableView;
