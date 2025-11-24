@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import com.example.metodos.ProductosMedios;
 public class HelloController {
-
     // --- Vinculación con elementos del Menú ---
     @FXML private MenuItem mi_cuadradosMedios;
     @FXML private MenuItem mi_multiplicadorConstante;
@@ -20,7 +19,6 @@ public class HelloController {
     @FXML private MenuItem mi_transformadaInversa;
     @FXML private MenuItem mi_convolucion;
     @FXML private MenuItem mi_composicion;
-
 
     // --- Vinculación con la Tabla y sus Columnas ---
     @FXML private TableView<DatoGenerado> tableView;
@@ -38,10 +36,8 @@ public class HelloController {
     @FXML private TextField tf_m;
     @FXML private TextField tf_n;
     @FXML private Button btn_generar;
-
     // Variable para saber qué generador está seleccionado
     private String generadorSeleccionado = "";
-
     @FXML
     public void initialize() {
         tc_n.setCellValueFactory(new PropertyValueFactory<>("n"));
@@ -57,6 +53,8 @@ public class HelloController {
         mi_multiplicativo.setOnAction(event -> prepararInterfaz("Congruencial Multiplicativo"));
         mi_lineal.setOnAction(event -> prepararInterfaz("Congruencial Lineal"));
         mi_cuadratico.setOnAction(event -> prepararInterfaz("Congruencial Cuadratico"));
+        mi_transformadaInversa.setOnAction(event -> prepararInterfaz("Transformada Inversa"));
+        mi_convolucion.setOnAction(event -> prepararInterfaz("Convolucion"));
 
         // Asignar la acción principal al botón "Generar"
         btn_generar.setOnAction(event -> generarNumeros());
@@ -187,7 +185,19 @@ public class HelloController {
 
                     tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
                     break;
-
+                case "Transformada Inversa":
+                    tf_x0.setDisable(true); // No necesitamos semilla explícita si usamos Math.random interno
+                    tf_a.setDisable(false); // Aquí pediremos LAMBDA
+                    tf_a.setPromptText("Lambda (λ)");
+                    tf_n.setDisable(false); // Cantidad de números
+                    break;
+                case "Convolucion": // <-- NUEVO CASO A AGREGAR
+                    tf_x0.setDisable(false); // Se usará para la Media (μ)
+                    tf_x0.setPromptText("Media (μ)");
+                    tf_a.setDisable(false);  // Se usará para la Desviación Estándar (σ)
+                    tf_a.setPromptText("Desviación Estándar (σ)");
+                    tf_n.setDisable(false);
+                    break;
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
             }
