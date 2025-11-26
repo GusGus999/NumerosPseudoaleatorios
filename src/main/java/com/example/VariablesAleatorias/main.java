@@ -7,14 +7,14 @@ public class main {
     public static void main(String[] args) {
 
         int opcion = 0;
-        boolean continuarEnMenu = true; // Esta variable controla el ciclo
+        boolean continuarEnMenu = true;
 
         do {
             String menu =
                     "===== MENÚ MÉTODOS DE GENERACIÓN =====\n" +
-                            "1. Método de la Transformada Inversa (Exponencial)\n" +
-                            "2. Método de Convolución (suma de 2 exponenciales)\n" +
-                            "3. Método de Composición (mezcla de 2 exponenciales)\n" +
+                            "1. Método de la Transformada Inversa\n" +
+                            "2. Método de Convolución\n" +
+                            "3. Método de Composición\n" +
                             "4. Salir\n\n" +//
                             "Elige una opción (1-4):";
 
@@ -45,7 +45,7 @@ public class main {
                     do {
                         subSeleccion = JOptionPane.showOptionDialog(
                                 null,
-                                "Generación de Variables Aleatorias\nSeleccione el método:",
+                                "Generación de Variables Aleatorias\nSeleccione la distribucion:",
                                 "Submenú de Simulación",
                                 JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.QUESTION_MESSAGE,
@@ -80,17 +80,15 @@ public class main {
                     continuarEnMenu = false; // Esto rompe el ciclo
                     break;
 
-
-
                 default:
                     JOptionPane.showMessageDialog(null, "Opción inválida. Elija 1, 2 o 3.", "Error", JOptionPane.WARNING_MESSAGE);
                     break;
             }
 
-        } while (continuarEnMenu); // El ciclo solo depende de esta variable
+        } while (continuarEnMenu);
     }
 
-    // Método auxiliar para preguntar si desea volver al menú
+    //Método auxiliar para preguntar si desea volver al menú
     private static boolean preguntarSiContinuar() {
         int respuesta = JOptionPane.showConfirmDialog(
                 null,
@@ -99,7 +97,6 @@ public class main {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
-        // Si responde SI (0) retorna true, si responde NO (1) retorna false
         return respuesta == JOptionPane.YES_OPTION;
     }
 }
