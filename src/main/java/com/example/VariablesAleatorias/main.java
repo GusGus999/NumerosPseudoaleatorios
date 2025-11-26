@@ -46,22 +46,26 @@ public class main {
             switch (opcion) {
                 case 1:
                     // TransformadaInversa.main(null);
+                    TransformadaInversaExponencial.ejecutarExponencial();
                     JOptionPane.showMessageDialog(null, "Método aún no implementado");
                     continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
-
                 case 2:
+                    TransformadaInversaUniforme.ejecutarUniforme();
+                    break;
+
+                case 3:
                     // Convolucion.main(null);
                     JOptionPane.showMessageDialog(null, "Método aún no implementado");
                     continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
 
-                case 3:
+                case 4:
                     MetodoComposicion.ejecutar();
                     continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
 
-                case 4:
+                case 5:
                     JOptionPane.showMessageDialog(
                             null,
                             "¡Hasta pronto!",

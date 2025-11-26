@@ -191,9 +191,7 @@ public class HelloController {
                     long semilla1_pm = Long.parseLong(tf_x0.getText());
                     long semilla2_pm = Long.parseLong(tf_a.getText());
                     int n_pm = Integer.parseInt(tf_n.getText());
-
                     break;
-
                 case "Congruencial Multiplicativo":
                     int x0_cmm = Integer.parseInt(tf_x0.getText());
                     int a_cmm = Integer.parseInt(tf_a.getText());
@@ -409,7 +407,6 @@ public class HelloController {
     public static boolean sonPrimosRelativos(int a, int b) {
         return mcd(a, b) == 1;
     }
-
 
     public static int mcd(int a, int b) {
         while (b != 0) {
