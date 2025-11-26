@@ -102,17 +102,17 @@ public class HelloController {
                 tf_c.setDisable(false);  // Semilla 4
                 tf_d.setDisable(false);  // Semilla 5
                 break;
-            case "Congruencial Multiplicativo":
-                tf_x0.setDisable(false);
-                tf_a.setDisable(false);
-                tf_n.setDisable(false);
-                tf_d.setDisable(false);
-                break;
             case "Congruencial Lineal":
                 tf_x0.setDisable(false);
                 tf_a.setDisable(false);
                 tf_c.setDisable(false);
                 tf_m.setDisable(false);
+                break;
+            case "Congruencial Multiplicativo":
+                tf_x0.setDisable(false);
+                tf_a.setDisable(false);
+                tf_n.setDisable(false);
+                tf_d.setDisable(false);
                 break;
             case "Congruencial Cuadratico":
                 tf_x0.setDisable(false);
@@ -204,34 +204,6 @@ public class HelloController {
                     tableView.setItems(congruencialMultiplicativo(a_cmm, n_cmm, x0_cmm, m_cmm));
                     break;
 
-                case "Congruencial Cuadratico":
-                    int x0_cc = Integer.parseInt(tf_x0.getText());
-                    int a_cc = Integer.parseInt(tf_a.getText());
-                    int b_cc = Integer.parseInt(tf_b.getText());
-                    int c_cc = Integer.parseInt(tf_c.getText());
-                    int d_cc = Integer.parseInt(tf_d.getText());
-                    int m_cc = (int) Math.pow(2,10);
-                    tf_m.setText(String.valueOf(m_cc));
-
-                    if (String.valueOf(x0_cc).length() > 1 || String.valueOf(a_cc).length() > 1 || String.valueOf(b_cc).length() > 1 ||String.valueOf(c_cc).length() > 1 || String.valueOf(d_cc).length() > 1) {
-                        mostrarAlerta("Error de Entrada", "La semilla (x0) y la constante (a) deben tener 4 dígitos.");
-                        return;
-                    }
-
-                    tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
-                    break;
-                case "Transformada Inversa":
-                    // Usamos tf_a para Lambda y tf_n para la cantidad
-                    double lambda = Double.parseDouble(tf_a.getText());
-                    int n_ti = Integer.parseInt(tf_n.getText());
-
-
-                    if (lambda <= 0) {
-                        mostrarAlerta("Error", "Lambda debe ser mayor a 0");
-                        return;
-                    }
-                    tableView.setItems(metodoTransformadaInversa(lambda, n_ti));
-                    break;
                 case "Congruencial Lineal":
                     int x0_cl = Integer.parseInt(tf_x0.getText());
                     int a_cl = Integer.parseInt(tf_a.getText());
@@ -261,6 +233,34 @@ public class HelloController {
                     tableView.setItems(congruencialLineal(a_cl, c_cl, m_cl, x0_cl));
                     break;
 
+                case "Congruencial Cuadratico":
+                    int x0_cc = Integer.parseInt(tf_x0.getText());
+                    int a_cc = Integer.parseInt(tf_a.getText());
+                    int b_cc = Integer.parseInt(tf_b.getText());
+                    int c_cc = Integer.parseInt(tf_c.getText());
+                    int d_cc = Integer.parseInt(tf_d.getText());
+                    int m_cc = (int) Math.pow(2,10);
+                    tf_m.setText(String.valueOf(m_cc));
+
+                    if (String.valueOf(x0_cc).length() > 1 || String.valueOf(a_cc).length() > 1 || String.valueOf(b_cc).length() > 1 ||String.valueOf(c_cc).length() > 1 || String.valueOf(d_cc).length() > 1) {
+                        mostrarAlerta("Error de Entrada", "La semilla (x0) y la constante (a) deben tener 4 dígitos.");
+                        return;
+                    }
+
+                    tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
+                    break;
+                case "Transformada Inversa":
+                    // Usamos tf_a para Lambda y tf_n para la cantidad
+                    double lambda = Double.parseDouble(tf_a.getText());
+                    int n_ti = Integer.parseInt(tf_n.getText());
+
+
+                    if (lambda <= 0) {
+                        mostrarAlerta("Error", "Lambda debe ser mayor a 0");
+                        return;
+                    }
+                    tableView.setItems(metodoTransformadaInversa(lambda, n_ti));
+                    break;
 
                 case "Convolucion":
                     //Agregar logica
@@ -335,6 +335,24 @@ public class HelloController {
         return datos;
     }
 
+    // --- Metodo congruencial cuadratico ---
+    public ObservableList<DatoGenerado> congruencialCuadratico(int x0, int a, int b, int c, int n, int m) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+
+        int xi = x0; // Asignamos la semilla a nuestra variable iterativa
+
+        for (int i = 0; i < n; i++) {
+            long operacion = (long) a * xi * xi + (long) b * xi + c;
+            int siguiente = (int) (operacion % m);
+            double ri = (double) siguiente / m;
+
+            datos.add(new DatoGenerado(i, String.valueOf(xi), String.valueOf(siguiente), String.valueOf(ri)));
+
+            xi = siguiente; // Actualizar xi para la siguiente iteración
+        }
+        return datos;
+    }
+
     //Congruencial lineal
     public ObservableList<DatoGenerado> congruencialLineal(int a, int c, int m, int x0) {
         ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
@@ -358,26 +376,6 @@ public class HelloController {
         return datos;
     }
 
-
-
-    // --- Metodo congruencial cuadratico ---
-    public ObservableList<DatoGenerado> congruencialCuadratico(int x0, int a, int b, int c, int n, int m) {
-        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
-        int xi = x0; // Asignamos la semilla a nuestra variable iterativa
-
-        for (int i = 0; i < n; i++) {
-            long operacion = (long) a * xi * xi + (long) b * xi + c;
-            int siguiente = (int) (operacion % m);
-            double ri = (double) siguiente / m;
-
-            datos.add(new DatoGenerado(i, String.valueOf(xi), String.valueOf(siguiente), String.valueOf(ri)));
-
-            xi = siguiente; // Actualizar xi para la siguiente iteración
-        }
-        return datos;
-    }
-
     // --- Alertas ---
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -392,7 +390,17 @@ public class HelloController {
         return mcd(a, b) == 1;
     }
 
-    private boolean MultiploFactoresPrimosDeM(int a, int m) {
+
+    public static int mcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    public boolean MultiploFactoresPrimosDeM(int a, int m) {
         int[] primos = factoresPrimos(m);
         for (int p : primos) {
             if ((a - 1) % p != 0) {
@@ -401,7 +409,7 @@ public class HelloController {
         }
         return true;
     }
-    private int[] factoresPrimos(int num) {
+    public int[] factoresPrimos(int num) {
         Set<Integer> factores = new HashSet<>();
         int n = num;
 
@@ -421,15 +429,6 @@ public class HelloController {
             res[idx++] = f;
         }
         return res;
-    }
-
-    public static int mcd(int a, int b) {
-        while (b != 0) {
-            int temp = b;
-            b = a % b;
-            a = temp;
-        }
-        return a;
     }
     public ObservableList<DatoGenerado> metodoTransformadaInversa(double lambda, int n) {
         ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
