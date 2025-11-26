@@ -266,11 +266,11 @@ public class HelloController {
                     int m_ti  = Integer.parseInt(tf_m.getText());
                     int n_ti  = Integer.parseInt(tf_n.getText());
                     double lambda = Double.parseDouble(tf_b.getText());
-                    if (!CongruencialLineal.sonPrimosRelativos(c_ti, m_ti)) {
+                    if (!sonPrimosRelativos(c_ti, m_ti)) {
                         mostrarAlerta("Error", "c y m no son primos relativos.");
                         return;
                     }
-                    if (!CongruencialLineal.aMenosUnoMultiploFactoresPrimosDeM(a_ti, m_ti)) {
+                    if (MultiploFactoresPrimosDeM(a_ti, m_ti)) {
                         mostrarAlerta("Error", "a-1 falla la regla de factores primos.");
                         return;
                     }
