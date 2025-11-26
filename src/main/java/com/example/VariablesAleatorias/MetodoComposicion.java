@@ -7,7 +7,7 @@ public class MetodoComposicion {
 
     public static void main(String[] args) {
 
-        // Declaración de variables
+
         int n;
         double P1, P2, LAMBDA1, LAMBDA2;
 
