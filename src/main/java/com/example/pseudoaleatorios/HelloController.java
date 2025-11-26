@@ -7,6 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import com.example.metodos.ProductosMedios;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class HelloController {
     // --- Vinculación con elementos del Menú ---
     @FXML private MenuItem mi_cuadradosMedios;
@@ -234,8 +238,29 @@ public class HelloController {
                     int c_cl = Integer.parseInt(tf_c.getText());
                     int m_cl = Integer.parseInt(tf_m.getText());
 
+                    // --- VALIDACIONES EXACTAS DEL CÓDIGO MODELO ---
+
+                    // 1. Validar que c y m sean primos relativos
+                    if (!sonPrimosRelativos(c_cl, m_cl)) {
+                        mostrarAlerta("Error", "c y m deben ser primos relativos (gcd(c, m) = 1)");
+                        return;
+                    }
+
+                    // 2. Validar que (a - 1) sea múltiplo de los factores primos de m
+                    if (!MultiploFactoresPrimosDeM(a_cl, m_cl)) {
+                        mostrarAlerta("Error", "a - 1 debe ser múltiplo de todos los factores primos de m.");
+                        return;
+                    }
+
+                    // 3. Validar regla especial si m es múltiplo de 4
+                    if (m_cl % 4 == 0 && (a_cl - 1) % 4 != 0) {
+                        mostrarAlerta("Error", "Si m es múltiplo de 4, entonces (a - 1) debe ser múltiplo de 4.");
+                        return;
+                    }
+
                     tableView.setItems(congruencialLineal(a_cl, c_cl, m_cl, x0_cl));
                     break;
+
 
                 case "Convolucion":
                     //Agregar logica
@@ -365,6 +390,37 @@ public class HelloController {
     // --- Metodos auxiliares ---
     public static boolean sonPrimosRelativos(int a, int b) {
         return mcd(a, b) == 1;
+    }
+
+    private boolean MultiploFactoresPrimosDeM(int a, int m) {
+        int[] primos = factoresPrimos(m);
+        for (int p : primos) {
+            if ((a - 1) % p != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private int[] factoresPrimos(int num) {
+        Set<Integer> factores = new HashSet<>();
+        int n = num;
+
+        for (int i = 2; i <= n / i; i++) {
+            while (n % i == 0) {
+                factores.add(i);
+                n /= i;
+            }
+        }
+        if (n > 1) {
+            factores.add(n);
+        }
+
+        int[] res = new int[factores.size()];
+        int idx = 0;
+        for (int f : factores) {
+            res[idx++] = f;
+        }
+        return res;
     }
 
     public static int mcd(int a, int b) {
