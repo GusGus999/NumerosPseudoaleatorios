@@ -48,7 +48,7 @@ public class main {
 
                     break;
                 case 3:
-
+                    MetodoComposicion.ejecutar();
                     break;
                 case 4:
                     JOptionPane.showMessageDialog(
