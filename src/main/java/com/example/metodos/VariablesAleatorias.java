@@ -89,7 +89,6 @@ public class VariablesAleatorias {
     // 3. Composición: Distribución Triangular
     // ===========================================================
     public static void generarTriangular() {
-
         System.out.print("\nIngrese a (mínimo): ");
         double a = sc.nextDouble();
 
