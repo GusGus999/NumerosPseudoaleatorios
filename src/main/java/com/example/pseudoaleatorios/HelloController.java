@@ -10,7 +10,7 @@ import com.example.metodos.ProductosMedios;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import com.example.metodos.CongruencialLineal;
 public class HelloController {
     // --- Vinculación con elementos del Menú ---
     @FXML private MenuItem mi_cuadradosMedios;
@@ -129,10 +129,20 @@ public class HelloController {
                 tf_n.setDisable(false);  // Habilita campo para N
                 break;
             case "Transformada Inversa":
+                //Campos para el metodo
+                tf_x0.setDisable(false);
+                tf_x0.setPromptText("Semilla (X0)");
                 tf_a.setDisable(false);
+                tf_a.setPromptText("Constante mult. (a)");
+                tf_c.setDisable(false);
+                tf_c.setPromptText("Constante aditiva (c)");
+                tf_m.setDisable(false);
+                tf_m.setPromptText("Módulo (m)");
+                //campo para lambda
                 tf_b.setDisable(false);
-                tf_c.setPromptText("Lambda (λ)");
-
+                tf_b.setPromptText("Lambda (λ)");
+                //n
+                tf_n.setDisable(false);
                 break;
             case "Composicion":
                 // Usaremos Distribución Triangular como ejemplo de Composición
@@ -250,18 +260,28 @@ public class HelloController {
                     tableView.setItems(congruencialCuadratico(x0_cc, a_cc, b_cc, c_cc,d_cc-1, m_cc));
                     break;
                 case "Transformada Inversa":
-                    // Usamos tf_a para Lambda y tf_n para la cantidad
-                    double lambda = Double.parseDouble(tf_a.getText());
-                    int n_ti = Integer.parseInt(tf_n.getText());
-
-
-                    if (lambda <= 0) {
-                        mostrarAlerta("Error", "Lambda debe ser mayor a 0");
+                    int x0_ti = Integer.parseInt(tf_x0.getText());
+                    int a_ti  = Integer.parseInt(tf_a.getText());
+                    int c_ti  = Integer.parseInt(tf_c.getText());
+                    int m_ti  = Integer.parseInt(tf_m.getText());
+                    int n_ti  = Integer.parseInt(tf_n.getText());
+                    double lambda = Double.parseDouble(tf_b.getText());
+                    if (!CongruencialLineal.sonPrimosRelativos(c_ti, m_ti)) {
+                        mostrarAlerta("Error", "c y m no son primos relativos.");
                         return;
                     }
-                    tableView.setItems(metodoTransformadaInversa(lambda, n_ti));
-                    break;
+                    if (!CongruencialLineal.aMenosUnoMultiploFactoresPrimosDeM(a_ti, m_ti)) {
+                        mostrarAlerta("Error", "a-1 falla la regla de factores primos.");
+                        return;
+                    }
+                    // nota: "Si $m$ es divisible entre 4, entonces $a - 1$ también debe ser divisible entre 4".
+                    if (m_ti % 4 == 0 && (a_ti - 1) % 4 != 0) {
+                        mostrarAlerta("Error", "m es múltiplo de 4, a-1 también debe serlo.");
+                        return;
+                    }
 
+                    tableView.setItems(metodoTransformadaInversa(lambda, n_ti, x0_ti, a_ti, c_ti, m_ti));
+                    break;
                 case "Convolucion":
                     //Agregar logica
 
@@ -430,16 +450,22 @@ public class HelloController {
         }
         return res;
     }
-    public ObservableList<DatoGenerado> metodoTransformadaInversa(double lambda, int n) {
+
+    public ObservableList<DatoGenerado> metodoTransformadaInversa(double lambda, int n, int x0, int a, int c, int m) {
         ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+        long xi = x0;
         for (int i = 0; i < n; i++) {
-            double ri = Math.random();
-            double xi = (-1.0 / lambda) * Math.log(1.0 - ri);
+            // Generador congruencial Usando los parámetros a, c, m
+            xi = (a * xi + c) % m;
+            double ri = (double) xi / m;
+            //Tranformada inversa
+            // x = -ln(1 - R) / lambda
+            double valorSimulado = (-1.0 / lambda) * Math.log(1.0 - ri);
             datos.add(new DatoGenerado(
                     i + 1,
-                    "",
-                    String.format("%.4f", xi), // Resultado final (X)
-                    String.format("%.4f", ri)  // R generado
+                    String.format("%.4f", valorSimulado),
+                    String.valueOf(xi),
+                    String.format("%.4f", ri)
             ));
         }
         return datos;
