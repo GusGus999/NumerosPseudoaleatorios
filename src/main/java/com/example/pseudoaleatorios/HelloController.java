@@ -74,6 +74,7 @@ public class HelloController {
         tf_m.setDisable(true);
         tf_n.setDisable(true);
 
+
         // habilita solo los necesarios para cada caso
         switch (generador) {
             case "Cuadrados Medios":
@@ -120,12 +121,11 @@ public class HelloController {
                 tf_n.setDisable(false);  // Habilita campo para N
                 break;
             case "Transformada Inversa":
-                tf_a.setDisable(false); // Habilita campo para Lambda
-                tf_a.setPromptText("Lambda (λ)");
-                tf_n.setDisable(false); // Habilita campo para N
-                break;
-            // ... dentro del switch (generador) ...
+                tf_a.setDisable(false);
+                tf_b.setDisable(false);
+                tf_c.setPromptText("Lambda (λ)");
 
+                break;
             case "Composicion":
                 // Usaremos Distribución Triangular como ejemplo de Composición
                 tf_a.setDisable(false);
@@ -217,6 +217,7 @@ public class HelloController {
                     double lambda = Double.parseDouble(tf_a.getText());
                     int n_ti = Integer.parseInt(tf_n.getText());
 
+
                     if (lambda <= 0) {
                         mostrarAlerta("Error", "Lambda debe ser mayor a 0");
                         return;
@@ -224,37 +225,10 @@ public class HelloController {
                     tableView.setItems(metodoTransformadaInversa(lambda, n_ti));
                     break;
                 case "Convolucion":
-                    // Usamos tf_x0 para la Media y tf_a para la Desviación Estándar
-                    double media = Double.parseDouble(tf_x0.getText());
-                    double desviacion = Double.parseDouble(tf_a.getText());
-                    int n_conv = Integer.parseInt(tf_n.getText());
-
-                    if (desviacion < 0) {
-                        mostrarAlerta("Error", "La desviación estándar no puede ser negativa");
-                        return;
-                    }
-                    tableView.setItems(metodoConvolucion(media, desviacion, n_conv));
-                    break;
-                // ... dentro del switch (generadorSeleccionado) ...
+                    //Agregar logica
 
                 case "Composicion":
-                    // Leemos los 3 parámetros de la Triangular
-                    double min_comp = Double.parseDouble(tf_a.getText());
-                    double max_comp = Double.parseDouble(tf_b.getText());
-                    double moda_comp = Double.parseDouble(tf_c.getText());
-                    int n_comp = Integer.parseInt(tf_n.getText());
-
-                    // Validaciones lógicas de un triángulo
-                    if (min_comp >= max_comp) {
-                        mostrarAlerta("Error", "El Mínimo (a) debe ser menor que el Máximo (b).");
-                        return;
-                    }
-                    if (moda_comp < min_comp || moda_comp > max_comp) {
-                        mostrarAlerta("Error", "La Moda (c) debe estar entre a y b.");
-                        return;
-                    }
-
-                    tableView.setItems(metodoComposicion(min_comp, max_comp, moda_comp, n_comp));
+                   //Agregar logica
                     break;
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
@@ -388,7 +362,7 @@ public class HelloController {
         return datosExponencial;
     }
 
-    // --- Método Transformada Inversa (Exponencial) ---
+
     public ObservableList<DatoGenerado> metodoTransformadaInversa(double lambda, int n) {
         ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
 
