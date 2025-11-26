@@ -67,22 +67,19 @@ public class main {
                     continuarEnMenu = preguntarSiContinuar();
                     break;
                 case 2:
-                    continuarEnMenu = preguntarSiContinuar();
-                    break;
-                case 3:
                     MetodoConvolucion.ejecutar();
                     continuarEnMenu = preguntarSiContinuar();
                     break;
-                case 4:
+                case 3:
                     MetodoComposicion.ejecutar();
                     continuarEnMenu = preguntarSiContinuar();
                     break;
-
-                case 5:
-                    // Opción SALIR
+                case 4:
+// Opción SALIR
                     JOptionPane.showMessageDialog(null, "¡Hasta pronto!", "Fin", JOptionPane.INFORMATION_MESSAGE);
                     continuarEnMenu = false; // Esto rompe el ciclo
                     break;
+
 
 
                 default:
