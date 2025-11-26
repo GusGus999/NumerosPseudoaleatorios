@@ -17,7 +17,7 @@ public class main {
                             "1. Método de la Transformada Inversa (Exponencial)\n" +
                             "2. Método de Convolución (suma de 2 exponenciales)\n" +
                             "3. Método de Composición (mezcla de 2 exponenciales)\n" +
-                            "4. Salir\n\n" +
+                            "4. Salir\n\n" +//
                             "Elige una opción (1-4):";
 
             String entrada = JOptionPane.showInputDialog(
