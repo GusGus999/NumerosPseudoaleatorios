@@ -48,18 +48,18 @@ public class main {
 
                     break;
 
-                case 3:
+                case 2:
                     // Convolucion.main(null);
-                    JOptionPane.showMessageDialog(null, "Método aún no implementado");
-                    continuar = preguntarSiContinuar();  // 👈 Preguntar
+                    MetodoConvolucion.ejecutar();
+                    continuar = preguntarSiContinuar();
                     break;
 
-                case 4:
+                case 3:
                     MetodoComposicion.ejecutar();
                     continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
 
-                case 5:
+                case 4:
                     JOptionPane.showMessageDialog(
                             null,
                             "¡Hasta pronto!",

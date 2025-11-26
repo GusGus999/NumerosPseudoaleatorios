@@ -59,6 +59,7 @@ public class MetodoConvolucion {
 
         try {
             n = Integer.parseInt(inputN);
+            if (n <= 0) { error("N debe ser un entero positivo."); return; }
         } catch (Exception e) {
             error("N inválido.");
             return;
@@ -87,10 +88,10 @@ public class MetodoConvolucion {
 
             for (int j = 1; j <= k; j++) {
                 double u = CongruencialLineal.siguienteRi();
-                double exp = (-1.0 / lambda) * log(u);
+                double expVal = (-1.0 / lambda) * log(u);
 
-                suma += exp;
-                detalle.append(String.format("Exp%d=%.4f ", j, exp));
+                suma += expVal;
+                detalle.append(String.format("Exp%d=%.4f ", j, expVal));
             }
 
             listaXi.add(suma);
@@ -125,7 +126,7 @@ public class MetodoConvolucion {
             );
 
             if (sel == 0) realizarChiCuadrada(listaXi, k, lambda);
-            if (sel == 1) realizarKS(listaXi, k, lambda);
+            if (sel == 1) realizarKS(listaXi, lambda);
 
         } while (sel != 2 && sel != -1);
     }
@@ -143,11 +144,13 @@ public class MetodoConvolucion {
         double max = Collections.max(datos);
         double ancho = (max - min) / numInt;
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("--- PRUEBA CHI-CUADRADA (Erlang) ---\n");
-        sb.append(String.format("H0: Los datos siguen Erlang(k=%d, λ=%.3f)\n\n", k, lambda));
-        sb.append(String.format("%-10s %-15s %-10s %-10s %-10s\n",
-                "Int", "Rango", "FO", "FE", "Chi parcial"));
+        StringBuilder html = new StringBuilder();
+        html.append("<html><body>");
+        html.append("<h2>Prueba Chi-Cuadrada (Erlang)</h2>");
+        html.append(String.format("<b>H0:</b> Los datos siguen Erlang(k=%d, λ=%.3f)<br><br>", k, lambda));
+
+        html.append("<table border='1' cellspacing='0' cellpadding='4'>");
+        html.append("<tr><th>Intervalo</th><th>Rango</th><th>FO</th><th>FE</th><th>Chi Parcial</th></tr>");
 
         double chi = 0;
 
@@ -166,70 +169,95 @@ public class MetodoConvolucion {
 
             double prob = cdfErlang(limSup, k, lambda) - cdfErlang(limInf, k, lambda);
             double fe = prob * n;
-
             double chiParcial = (fe > 0) ? pow(fo - fe, 2) / fe : 0;
+
             chi += chiParcial;
 
-            sb.append(String.format("%-10d [%.2f - %.2f] %-10d %-10.2f %-10.4f\n",
-                    (i + 1), limInf, limSup, fo, fe, chiParcial));
+            html.append(String.format(
+                    "<tr><td>%d</td><td>[%.3f , %.3f]</td><td>%d</td><td>%.3f</td><td>%.4f</td></tr>",
+                    (i + 1), limInf, limSup, fo, fe, chiParcial
+            ));
         }
+
+        html.append("</table><br>");
 
         double chiCrit = obtenerChiCritico(numInt - 1);
 
-        sb.append("\nChi calculada: ").append(chi);
-        sb.append("\nValor crítico (α=0.05, gl=").append(numInt - 1).append("): ").append(chiCrit);
-        sb.append("\n\nRESULTADO: ");
+        html.append(String.format("<b>Chi Calculada:</b> %.4f<br>", chi));
+        html.append(String.format("<b>Valor Crítico (α=0.05):</b> %.4f<br><br>", chiCrit));
 
-        if (chi < chiCrit) sb.append("NO se rechaza H0 (Pasa)");
-        else sb.append("SE rechaza H0 (No pasa)");
+        if (chi < chiCrit) {
+            html.append("<b style='color:green;'>RESULTADO: NO SE RECHAZA H0 (Pasa)</b>");
+        } else {
+            html.append("<b style='color:red;'>RESULTADO: SE RECHAZA H0 (No pasa)</b>");
+        }
 
-        mostrar(sb.toString(), "Chi-Cuadrada (Erlang)");
+        html.append("</body></html>");
+
+        JOptionPane.showMessageDialog(null, html.toString(),
+                "Prueba Chi-Cuadrada", JOptionPane.PLAIN_MESSAGE);
     }
+
 
     // ======================================================================
     // ==========  KOLMOGOROV–SMIRNOV  ======================================
     // ======================================================================
-    private static void realizarKS(List<Double> datosOriginal, int k, double lambda) {
+    private static void realizarKS(List<Double> datosOriginales, double lambda) {
 
-        List<Double> datos = new ArrayList<>(datosOriginal);
+        List<Double> datos = new ArrayList<>(datosOriginales);
         Collections.sort(datos);
-
         int n = datos.size();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("--- PRUEBA K-S (Erlang) ---\n");
-        sb.append(String.format("H0: Los datos siguen Erlang(k=%d, λ=%.3f)\n\n", k, lambda));
+        StringBuilder html = new StringBuilder();
+        html.append("<html><body>");
+        html.append("<h2>Prueba Kolmogorov-Smirnov</h2>");
+        html.append("<b>H0:</b> Los datos siguen Exponencial(λ)<br><br>");
 
-        double dMax = 0;
+        html.append("<table border='1' cellspacing='0' cellpadding='4'>");
+        html.append("<tr><th>i</th><th>Xi</th><th>|Dif|</th></tr>");
+
+        double maxDif = 0;
 
         for (int i = 0; i < n; i++) {
-            double x = datos.get(i);
+            double xi = datos.get(i);
 
             double fObs = (double) (i + 1) / n;
-            double fEsp = cdfErlang(x, k, lambda);
+            double fEsp = 1 - Math.exp(-lambda * xi);
+            double dif = Math.abs(fObs - fEsp);
 
-            double d = Math.abs(fObs - fEsp);
-            if (d > dMax) dMax = d;
+            if (dif > maxDif) maxDif = dif;
 
+            // Mostrar solo extremos como quieres
             if (i < 15 || i > n - 5) {
-                sb.append(String.format("%d  Xi=%.4f  Fobs=%.4f  Fesp=%.4f  Dif=%.4f\n",
-                        i + 1, x, fObs, fEsp, d));
+                html.append(String.format(
+                        "<tr><td>%d</td><td>%.4f</td><td>%.4f</td></tr>",
+                        (i + 1), xi, dif
+                ));
             } else if (i == 15) {
-                sb.append("... (datos ocultos) ...\n");
+                html.append("<tr><td colspan='3'>... datos ocultos ...</td></tr>");
             }
         }
 
-        double dCrit = 1.36 / Math.sqrt(n);
+        html.append("</table><br>");
 
-        sb.append("\nDmax calculado: ").append(dMax);
-        sb.append("\nD crítico (α=0.05): ").append(dCrit);
-        sb.append("\n\nRESULTADO: ");
+        double valorCritico = 1.36 / Math.sqrt(n);
 
-        if (dMax < dCrit) sb.append("NO se rechaza H0 (Pasa)");
-        else sb.append("SE rechaza H0 (No pasa)");
+        html.append(String.format("<b>D Máx:</b> %.4f<br>", maxDif));
+        html.append(String.format("<b>Valor Crítico (0.05):</b> %.4f<br><br>", valorCritico));
 
-        mostrar(sb.toString(), "K-S (Erlang)");
+        if (maxDif < valorCritico) {
+            html.append("<b style='color:green;'>RESULTADO: NO SE RECHAZA H0 (Pasa)</b>");
+        } else {
+            html.append("<b style='color:red;'>RESULTADO: SE RECHAZA H0 (No pasa)</b>");
+        }
+
+        html.append("</body></html>");
+
+        JOptionPane.showMessageDialog(null, html.toString(),
+                "Kolmogorov-Smirnov", JOptionPane.PLAIN_MESSAGE);
     }
+
+
 
     // ======================================================================
     // ==========  CDF ERLANG  ==============================================
