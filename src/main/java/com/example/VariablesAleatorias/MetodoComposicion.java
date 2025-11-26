@@ -261,7 +261,7 @@ public class MetodoComposicion {
     }
 
     // ======================================================================
-    // UTILIDADES (Copiadas tal cual tu ejemplo)
+    // UTILIDADES
     // ======================================================================
     private static void error(String msg) {
         JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE);
@@ -274,8 +274,6 @@ public class MetodoComposicion {
     private static void mostrar(String txt, String titulo) {
         JTextArea area = new JTextArea(txt);
         area.setEditable(false);
-        // Usar fuente monoespaciada ayuda a alinear las tablas de texto
-        area.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 12));
         JOptionPane.showMessageDialog(null, new JScrollPane(area), titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
