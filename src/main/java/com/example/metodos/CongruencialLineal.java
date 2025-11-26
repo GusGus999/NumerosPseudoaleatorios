@@ -39,7 +39,7 @@ public class CongruencialLineal {
         }
     }
 
-    private static boolean sonPrimosRelativos(int x, int y) {
+    public static boolean sonPrimosRelativos(int x, int y) {
         return gcd(x, y) == 1;
     }
 
@@ -52,7 +52,7 @@ public class CongruencialLineal {
         return x;
     }
 
-    private static boolean aMenosUnoMultiploFactoresPrimosDeM(int a, int m) {
+    public static boolean aMenosUnoMultiploFactoresPrimosDeM(int a, int m) {
         int[] primos = factoresPrimos(m);
         for (int p : primos) {
             if ((a - 1) % p != 0) {
@@ -62,7 +62,7 @@ public class CongruencialLineal {
         return true;
     }
 
-    private static int[] factoresPrimos(int num) {
+    public static int[] factoresPrimos(int num) {
         Set<Integer> factores = new HashSet<>();
         int n = num;
         for (int i = 2; i <= n / i; i++) {
