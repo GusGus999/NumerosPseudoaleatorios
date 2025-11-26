@@ -338,123 +338,16 @@ public class HelloController {
         }
         return a;
     }
-    // Nuevo metodo para generar variables aleatorias
-    public ObservableList<DatoGenerado> generarExponencial(ObservableList<DatoGenerado> datosUniforme, double lambda) {
-        ObservableList<DatoGenerado> datosExponencial = FXCollections.observableArrayList();
-
-        for (DatoGenerado dato : datosUniforme) {
-            // 1. Obtener el número pseudoaleatorio R_i
-            double ri = Double.parseDouble(dato.getRn());
-
-            // 2. Aplicar la Transformada Inversa
-            double xi = (-1.0 / lambda) * Math.log(1.0 - ri);
-
-            // 3. Crear un nuevo objeto DatoGenerado para mostrar el resultado
-            // Reutilizamos los campos, por ejemplo, guardando el R_i en 'yn'
-            // y el X_i (variable exponencial) en 'rn'
-            datosExponencial.add(new DatoGenerado(
-                    dato.getN(),
-                    String.format("%.4f", ri), // R_i original (uniforme)
-                    "", // Campo no usado
-                    String.format("%.4f", xi) // X_i transformado (exponencial)
-            ));
-        }
-        return datosExponencial;
-    }
-
-
     public ObservableList<DatoGenerado> metodoTransformadaInversa(double lambda, int n) {
         ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
         for (int i = 0; i < n; i++) {
-            // 1. Generamos R (uniforme 0-1) usando la clase Math de Java
             double ri = Math.random();
-
-            // 2. Aplicamos la fórmula de la inversa para exponencial
-            // X = -1/lambda * ln(1 - R)
             double xi = (-1.0 / lambda) * Math.log(1.0 - ri);
-
-            // Guardamos en la tabla:
-            // n: índice
-            // yn: vacío o fórmula
-            // xn: El resultado final (Variable Aleatoria Exponencial)
-            // rn: El número aleatorio uniforme usado (R)
             datos.add(new DatoGenerado(
                     i + 1,
                     "",
                     String.format("%.4f", xi), // Resultado final (X)
                     String.format("%.4f", ri)  // R generado
-            ));
-        }
-        return datos;
-    }
-
-    // --- Método de Convolución (Normal) ---
-    public ObservableList<DatoGenerado> metodoConvolucion(double media, double desviacion, int n) {
-        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
-        for (int i = 0; i < n; i++) {
-            double suma = 0;
-
-            // 1. Sumar 12 números aleatorios uniformes (0-1)
-            for (int k = 0; k < 12; k++) {
-                suma += Math.random();
-            }
-
-            // 2. Calcular Z (Normal Estándar) -> Z = Suma - 6
-            double z = suma - 6.0;
-
-            // 3. Ajustar a la Media y Desviación -> X = Media + Desv * Z
-            double xi = media + (desviacion * z);
-
-            // Guardamos en la tabla
-            datos.add(new DatoGenerado(
-                    i + 1,
-                    String.format("Z: %.4f", z), // Mostramos Z como dato intermedio
-                    String.format("%.4f", xi),   // Resultado final (X)
-                    String.format("%.2f", suma)  // La suma de los 12
-            ));
-        }
-        return datos;
-    }
-    // --- Método de Composición (Distribución Triangular) ---
-    public ObservableList<DatoGenerado> metodoComposicion(double a, double b, double c, int n) {
-        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
-        for (int i = 0; i < n; i++) {
-            // Generamos dos números uniformes
-            double u1 = Math.random();
-            double u2 = Math.random();
-
-            // Calculamos la proporción del área izquierda (probabilidad de usar el lado izquierdo)
-            // Si c == a (triángulo rectángulo izquierdo), area1 es 0.
-            // Si c == b (triángulo rectángulo derecho), area1 es 1.
-            double probIzquierda = (c - a) / (b - a);
-
-            double xi;
-            String formulaUsada; // Para saber qué parte del triángulo usamos
-
-            if (u1 <= probIzquierda) {
-                // Caso 1: Usamos la parte izquierda del triángulo (a -> c)
-                // Fórmula: a + sqrt(u2) * (c - a)
-                xi = a + Math.sqrt(u2) * (c - a);
-                formulaUsada = "Izquierda (a->c)";
-            } else {
-                // Caso 2: Usamos la parte derecha del triángulo (c -> b)
-                // Fórmula: b - sqrt(1 - u2) * (b - c)
-                xi = b - Math.sqrt(1.0 - u2) * (b - c);
-                formulaUsada = "Derecha (c->b)";
-            }
-
-            // Guardamos en la tabla
-            // Yn: Mostramos qué lado del triángulo se eligió
-            // Xn: Valor generado
-            // Rn: Los randoms usados (u1, u2)
-            datos.add(new DatoGenerado(
-                    i + 1,
-                    formulaUsada,
-                    String.format("%.4f", xi),
-                    String.format("u1:%.2f u2:%.2f", u1, u2)
             ));
         }
         return datos;
