@@ -57,8 +57,8 @@ public class main {
 
                 case 3:
                     // Convolucion.main(null);
-                    JOptionPane.showMessageDialog(null, "Método aún no implementado");
-                    continuar = preguntarSiContinuar();  // 👈 Preguntar
+                    MetodoConvolucion.ejecutar();
+                    continuar = preguntarSiContinuar();
                     break;
 
                 case 4:
