@@ -60,7 +60,6 @@ public class VariablesAleatorias {
     // 2. Convolución: Distribución Erlang k (suma de k exponenciales)
     // ===========================================================
     public static void generarErlang() {
-
         System.out.print("\nIngrese k (entero): ");
         int k = sc.nextInt();
 
