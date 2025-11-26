@@ -18,7 +18,7 @@ public class main {
                             "2. Método de Convolución (suma de 2 exponenciales)\n" +
                             "3. Método de Composición (mezcla de 2 exponenciales)\n" +
                             "4. Salir\n\n" +
-                            "Elige una opción (1-5):";
+                            "Elige una opción (1-4):";
 
             String entrada = JOptionPane.showInputDialog(
                     null,
@@ -45,18 +45,13 @@ public class main {
 
             switch (opcion) {
                 case 1:
-                    // TransformadaInversa.main(null);
-                    TransformadaInversaExponencial.ejecutarExponencial();
-                    continuar = preguntarSiContinuar();  // 👈 Preguntar
-                    break;
-                case 2:
-                    TransformadaInversaUniforme.ejecutarUniforme();
+
                     break;
 
                 case 3:
                     // Convolucion.main(null);
-                    MetodoConvolucion.ejecutar();
-                    continuar = preguntarSiContinuar();
+                    JOptionPane.showMessageDialog(null, "Método aún no implementado");
+                    continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
 
                 case 4:
