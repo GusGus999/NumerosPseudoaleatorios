@@ -15,10 +15,9 @@ public class main {
             String menu =
                     "===== MENÚ MÉTODOS DE GENERACIÓN =====\n" +
                             "1. Método de la Transformada Inversa (Exponencial)\n" +
-                            "2. Método de la Transformada Inversa (Uniforme Discreta)\n" +
-                            "3. Método de Convolución (suma de 2 exponenciales)\n" +
-                            "4. Método de Composición (mezcla de 2 exponenciales)\n" +
-                            "5. Salir\n\n" +
+                            "2. Método de Convolución (suma de 2 exponenciales)\n" +
+                            "3. Método de Composición (mezcla de 2 exponenciales)\n" +
+                            "4. Salir\n\n" +
                             "Elige una opción (1-5):";
 
             String entrada = JOptionPane.showInputDialog(
@@ -48,7 +47,6 @@ public class main {
                 case 1:
                     // TransformadaInversa.main(null);
                     TransformadaInversaExponencial.ejecutarExponencial();
-                    JOptionPane.showMessageDialog(null, "Método aún no implementado");
                     continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
                 case 2:
