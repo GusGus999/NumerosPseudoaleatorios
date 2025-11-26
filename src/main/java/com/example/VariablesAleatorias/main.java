@@ -45,7 +45,30 @@ public class main {
 
             switch (opcion) {
                 case 1:
-
+                    String[] subOpciones = {"Uniforme", "Exponencial", "Volver"};
+                    int subSeleccion;
+                    do {
+                        subSeleccion = JOptionPane.showOptionDialog(
+                                null,
+                                "Generación de Variables Aleatorias\nSeleccione el método:",
+                                "Submenú de Simulación",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                subOpciones,
+                                subOpciones[0]
+                        );
+                        switch (subSeleccion) {
+                            case 0:
+                                TransformadaInversaUniforme.ejecutarUniforme();
+                                break;
+                            case 1:
+                                TransformadaInversaExponencial.ejecutarExponencial();
+                                break;
+                            case 2:
+                                break;
+                        }
+                    } while (subSeleccion != 2 && subSeleccion != -1);
                     break;
 
                 case 2:
