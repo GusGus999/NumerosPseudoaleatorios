@@ -7,6 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import com.example.metodos.ProductosMedios;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class HelloController {
     // --- Vinculación con elementos del Menú ---
     @FXML private MenuItem mi_cuadradosMedios;
@@ -74,6 +78,7 @@ public class HelloController {
         tf_m.setDisable(true);
         tf_n.setDisable(true);
 
+
         // habilita solo los necesarios para cada caso
         switch (generador) {
             case "Cuadrados Medios":
@@ -104,6 +109,10 @@ public class HelloController {
                 tf_d.setDisable(false);
                 break;
             case "Congruencial Lineal":
+                tf_x0.setDisable(false);
+                tf_a.setDisable(false);
+                tf_c.setDisable(false);
+                tf_m.setDisable(false);
                 break;
             case "Congruencial Cuadratico":
                 tf_x0.setDisable(false);
@@ -120,12 +129,11 @@ public class HelloController {
                 tf_n.setDisable(false);  // Habilita campo para N
                 break;
             case "Transformada Inversa":
-                tf_a.setDisable(false); // Habilita campo para Lambda
-                tf_a.setPromptText("Lambda (λ)");
-                tf_n.setDisable(false); // Habilita campo para N
-                break;
-            // ... dentro del switch (generador) ...
+                tf_a.setDisable(false);
+                tf_b.setDisable(false);
+                tf_c.setPromptText("Lambda (λ)");
 
+                break;
             case "Composicion":
                 // Usaremos Distribución Triangular como ejemplo de Composición
                 tf_a.setDisable(false);
@@ -217,44 +225,48 @@ public class HelloController {
                     double lambda = Double.parseDouble(tf_a.getText());
                     int n_ti = Integer.parseInt(tf_n.getText());
 
+
                     if (lambda <= 0) {
                         mostrarAlerta("Error", "Lambda debe ser mayor a 0");
                         return;
                     }
                     tableView.setItems(metodoTransformadaInversa(lambda, n_ti));
                     break;
-                case "Convolucion":
-                    // Usamos tf_x0 para la Media y tf_a para la Desviación Estándar
-                    double media = Double.parseDouble(tf_x0.getText());
-                    double desviacion = Double.parseDouble(tf_a.getText());
-                    int n_conv = Integer.parseInt(tf_n.getText());
+                case "Congruencial Lineal":
+                    int x0_cl = Integer.parseInt(tf_x0.getText());
+                    int a_cl = Integer.parseInt(tf_a.getText());
+                    int c_cl = Integer.parseInt(tf_c.getText());
+                    int m_cl = Integer.parseInt(tf_m.getText());
 
-                    if (desviacion < 0) {
-                        mostrarAlerta("Error", "La desviación estándar no puede ser negativa");
+                    // --- VALIDACIONES EXACTAS DEL CÓDIGO MODELO ---
+
+                    // 1. Validar que c y m sean primos relativos
+                    if (!sonPrimosRelativos(c_cl, m_cl)) {
+                        mostrarAlerta("Error", "c y m deben ser primos relativos (gcd(c, m) = 1)");
                         return;
                     }
-                    tableView.setItems(metodoConvolucion(media, desviacion, n_conv));
+
+                    // 2. Validar que (a - 1) sea múltiplo de los factores primos de m
+                    if (!MultiploFactoresPrimosDeM(a_cl, m_cl)) {
+                        mostrarAlerta("Error", "a - 1 debe ser múltiplo de todos los factores primos de m.");
+                        return;
+                    }
+
+                    // 3. Validar regla especial si m es múltiplo de 4
+                    if (m_cl % 4 == 0 && (a_cl - 1) % 4 != 0) {
+                        mostrarAlerta("Error", "Si m es múltiplo de 4, entonces (a - 1) debe ser múltiplo de 4.");
+                        return;
+                    }
+
+                    tableView.setItems(congruencialLineal(a_cl, c_cl, m_cl, x0_cl));
                     break;
-                // ... dentro del switch (generadorSeleccionado) ...
+
+
+                case "Convolucion":
+                    //Agregar logica
 
                 case "Composicion":
-                    // Leemos los 3 parámetros de la Triangular
-                    double min_comp = Double.parseDouble(tf_a.getText());
-                    double max_comp = Double.parseDouble(tf_b.getText());
-                    double moda_comp = Double.parseDouble(tf_c.getText());
-                    int n_comp = Integer.parseInt(tf_n.getText());
-
-                    // Validaciones lógicas de un triángulo
-                    if (min_comp >= max_comp) {
-                        mostrarAlerta("Error", "El Mínimo (a) debe ser menor que el Máximo (b).");
-                        return;
-                    }
-                    if (moda_comp < min_comp || moda_comp > max_comp) {
-                        mostrarAlerta("Error", "La Moda (c) debe estar entre a y b.");
-                        return;
-                    }
-
-                    tableView.setItems(metodoComposicion(min_comp, max_comp, moda_comp, n_comp));
+                   //Agregar logica
                     break;
                 default:
                     mostrarAlerta("Advertencia", "Por favor, seleccione un método generador del menú.");
@@ -323,6 +335,30 @@ public class HelloController {
         return datos;
     }
 
+    //Congruencial lineal
+    public ObservableList<DatoGenerado> congruencialLineal(int a, int c, int m, int x0) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+
+        int xi = x0;
+
+        for (int i = 0; i < m - 1; i++) {
+            int siguiente = (a * xi + c) % m;
+            double ri = (double) siguiente / m;
+
+            datos.add(new DatoGenerado(
+                    i + 1,
+                    String.valueOf(xi),
+                    String.valueOf(siguiente),
+                    String.format("%.4f", ri)
+            ));
+
+            xi = siguiente;
+        }
+
+        return datos;
+    }
+
+
 
     // --- Metodo congruencial cuadratico ---
     public ObservableList<DatoGenerado> congruencialCuadratico(int x0, int a, int b, int c, int n, int m) {
@@ -356,6 +392,37 @@ public class HelloController {
         return mcd(a, b) == 1;
     }
 
+    private boolean MultiploFactoresPrimosDeM(int a, int m) {
+        int[] primos = factoresPrimos(m);
+        for (int p : primos) {
+            if ((a - 1) % p != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private int[] factoresPrimos(int num) {
+        Set<Integer> factores = new HashSet<>();
+        int n = num;
+
+        for (int i = 2; i <= n / i; i++) {
+            while (n % i == 0) {
+                factores.add(i);
+                n /= i;
+            }
+        }
+        if (n > 1) {
+            factores.add(n);
+        }
+
+        int[] res = new int[factores.size()];
+        int idx = 0;
+        for (int f : factores) {
+            res[idx++] = f;
+        }
+        return res;
+    }
+
     public static int mcd(int a, int b) {
         while (b != 0) {
             int temp = b;
@@ -364,123 +431,16 @@ public class HelloController {
         }
         return a;
     }
-    // Nuevo metodo para generar variables aleatorias
-    public ObservableList<DatoGenerado> generarExponencial(ObservableList<DatoGenerado> datosUniforme, double lambda) {
-        ObservableList<DatoGenerado> datosExponencial = FXCollections.observableArrayList();
-
-        for (DatoGenerado dato : datosUniforme) {
-            // 1. Obtener el número pseudoaleatorio R_i
-            double ri = Double.parseDouble(dato.getRn());
-
-            // 2. Aplicar la Transformada Inversa
-            double xi = (-1.0 / lambda) * Math.log(1.0 - ri);
-
-            // 3. Crear un nuevo objeto DatoGenerado para mostrar el resultado
-            // Reutilizamos los campos, por ejemplo, guardando el R_i en 'yn'
-            // y el X_i (variable exponencial) en 'rn'
-            datosExponencial.add(new DatoGenerado(
-                    dato.getN(),
-                    String.format("%.4f", ri), // R_i original (uniforme)
-                    "", // Campo no usado
-                    String.format("%.4f", xi) // X_i transformado (exponencial)
-            ));
-        }
-        return datosExponencial;
-    }
-
-    // --- Método Transformada Inversa (Exponencial) ---
     public ObservableList<DatoGenerado> metodoTransformadaInversa(double lambda, int n) {
         ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
         for (int i = 0; i < n; i++) {
-            // 1. Generamos R (uniforme 0-1) usando la clase Math de Java
             double ri = Math.random();
-
-            // 2. Aplicamos la fórmula de la inversa para exponencial
-            // X = -1/lambda * ln(1 - R)
             double xi = (-1.0 / lambda) * Math.log(1.0 - ri);
-
-            // Guardamos en la tabla:
-            // n: índice
-            // yn: vacío o fórmula
-            // xn: El resultado final (Variable Aleatoria Exponencial)
-            // rn: El número aleatorio uniforme usado (R)
             datos.add(new DatoGenerado(
                     i + 1,
                     "",
                     String.format("%.4f", xi), // Resultado final (X)
                     String.format("%.4f", ri)  // R generado
-            ));
-        }
-        return datos;
-    }
-
-    // --- Método de Convolución (Normal) ---
-    public ObservableList<DatoGenerado> metodoConvolucion(double media, double desviacion, int n) {
-        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
-        for (int i = 0; i < n; i++) {
-            double suma = 0;
-
-            // 1. Sumar 12 números aleatorios uniformes (0-1)
-            for (int k = 0; k < 12; k++) {
-                suma += Math.random();
-            }
-
-            // 2. Calcular Z (Normal Estándar) -> Z = Suma - 6
-            double z = suma - 6.0;
-
-            // 3. Ajustar a la Media y Desviación -> X = Media + Desv * Z
-            double xi = media + (desviacion * z);
-
-            // Guardamos en la tabla
-            datos.add(new DatoGenerado(
-                    i + 1,
-                    String.format("Z: %.4f", z), // Mostramos Z como dato intermedio
-                    String.format("%.4f", xi),   // Resultado final (X)
-                    String.format("%.2f", suma)  // La suma de los 12
-            ));
-        }
-        return datos;
-    }
-    // --- Método de Composición (Distribución Triangular) ---
-    public ObservableList<DatoGenerado> metodoComposicion(double a, double b, double c, int n) {
-        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
-
-        for (int i = 0; i < n; i++) {
-            // Generamos dos números uniformes
-            double u1 = Math.random();
-            double u2 = Math.random();
-
-            // Calculamos la proporción del área izquierda (probabilidad de usar el lado izquierdo)
-            // Si c == a (triángulo rectángulo izquierdo), area1 es 0.
-            // Si c == b (triángulo rectángulo derecho), area1 es 1.
-            double probIzquierda = (c - a) / (b - a);
-
-            double xi;
-            String formulaUsada; // Para saber qué parte del triángulo usamos
-
-            if (u1 <= probIzquierda) {
-                // Caso 1: Usamos la parte izquierda del triángulo (a -> c)
-                // Fórmula: a + sqrt(u2) * (c - a)
-                xi = a + Math.sqrt(u2) * (c - a);
-                formulaUsada = "Izquierda (a->c)";
-            } else {
-                // Caso 2: Usamos la parte derecha del triángulo (c -> b)
-                // Fórmula: b - sqrt(1 - u2) * (b - c)
-                xi = b - Math.sqrt(1.0 - u2) * (b - c);
-                formulaUsada = "Derecha (c->b)";
-            }
-
-            // Guardamos en la tabla
-            // Yn: Mostramos qué lado del triángulo se eligió
-            // Xn: Valor generado
-            // Rn: Los randoms usados (u1, u2)
-            datos.add(new DatoGenerado(
-                    i + 1,
-                    formulaUsada,
-                    String.format("%.4f", xi),
-                    String.format("u1:%.2f u2:%.2f", u1, u2)
             ));
         }
         return datos;
