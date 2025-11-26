@@ -1,12 +1,15 @@
 package com.example.metodos;
 
 import java.util.*;
+
 public class CongruencialLineal {
     public static void main(String[] args) {
-        int a = 16807;
-        int c = 0;
-        int m = 2147483647;
-        int xPrev = 1;
+
+        // Parámetros pequeños con periodo completo
+        int a = 21;
+        int c = 13;
+        int m = 100;
+        int xPrev = 10;
 
         if (!sonPrimosRelativos(c, m)) {
             System.out.println("Error: c y m no son primos relativos.");
@@ -27,7 +30,8 @@ public class CongruencialLineal {
         System.out.println("-".repeat(20));
         System.out.println("0\t" + xPrev + "\t" + ((double) xPrev / m));
 
-        for (int i = 1; i <= 10; i++) {
+        // AHORA ITERA EXACTAMENTE HASTA m-1
+        for (int i = 1; i <= m - 1; i++) {
             int xi = (a * xPrev + c) % m;
             double ri = (double) xi / m;
             System.out.println(i + "\t" + xi + "\t" + ri);
@@ -59,7 +63,7 @@ public class CongruencialLineal {
     }
 
     private static int[] factoresPrimos(int num) {
-        java.util.Set<Integer> factores = new java.util.HashSet<>();
+        Set<Integer> factores = new HashSet<>();
         int n = num;
         for (int i = 2; i <= n / i; i++) {
             while (n % i == 0) {

@@ -104,6 +104,10 @@ public class HelloController {
                 tf_d.setDisable(false);
                 break;
             case "Congruencial Lineal":
+                tf_x0.setDisable(false);
+                tf_a.setDisable(false);
+                tf_c.setDisable(false);
+                tf_m.setDisable(false);
                 break;
             case "Congruencial Cuadratico":
                 tf_x0.setDisable(false);
@@ -223,6 +227,15 @@ public class HelloController {
                     }
                     tableView.setItems(metodoTransformadaInversa(lambda, n_ti));
                     break;
+                case "Congruencial Lineal":
+                    int x0_cl = Integer.parseInt(tf_x0.getText());
+                    int a_cl = Integer.parseInt(tf_a.getText());
+                    int c_cl = Integer.parseInt(tf_c.getText());
+                    int m_cl = Integer.parseInt(tf_m.getText());
+
+                    tableView.setItems(congruencialLineal(a_cl, c_cl, m_cl, x0_cl));
+                    break;
+
                 case "Convolucion":
                     // Usamos tf_x0 para la Media y tf_a para la Desviación Estándar
                     double media = Double.parseDouble(tf_x0.getText());
@@ -322,6 +335,30 @@ public class HelloController {
         }
         return datos;
     }
+
+    //Congruencial lineal
+    public ObservableList<DatoGenerado> congruencialLineal(int a, int c, int m, int x0) {
+        ObservableList<DatoGenerado> datos = FXCollections.observableArrayList();
+
+        int xi = x0;
+
+        for (int i = 0; i < m - 1; i++) {
+            int siguiente = (a * xi + c) % m;
+            double ri = (double) siguiente / m;
+
+            datos.add(new DatoGenerado(
+                    i + 1,
+                    String.valueOf(xi),
+                    String.valueOf(siguiente),
+                    String.format("%.4f", ri)
+            ));
+
+            xi = siguiente;
+        }
+
+        return datos;
+    }
+
 
 
     // --- Metodo congruencial cuadratico ---
