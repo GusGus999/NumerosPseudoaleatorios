@@ -12,9 +12,10 @@ public class main {
             String menu =
                     "===== MENÚ MÉTODOS DE GENERACIÓN =====\n" +
                             "1. Método de la Transformada Inversa (Exponencial)\n" +
-                            "2. Método de Convolución (suma de 2 exponenciales)\n" +
-                            "3. Método de Composición (mezcla de 2 exponenciales)\n" +
-                            "4. Salir\n\n" +
+                            "2. Método de la Transformada Inversa (Uniforme Discreta)\n" +
+                            "3. Método de Convolución (suma de 2 exponenciales)\n" +
+                            "4. Método de Composición (mezcla de 2 exponenciales)\n" +
+                            "5. Salir\n\n" +
                             "Elige una opción (1-4):";
 
             String entrada = JOptionPane.showInputDialog(
@@ -42,10 +43,10 @@ public class main {
 
             switch (opcion) {
                 case 1:
-
+                    TransformadaInversaExponencial.ejecutarExponencial();
                     break;
                 case 2:
-
+                    TransformadaInversaUniforme.ejecutarUniforme();
                     break;
                 case 3:
 
