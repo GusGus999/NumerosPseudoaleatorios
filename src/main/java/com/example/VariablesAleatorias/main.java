@@ -1,12 +1,15 @@
 package com.example.VariablesAleatorias;
 
-import javax.swing.JOptionPane;
+import com.example.VariablesAleatorias.MetodoComposicion;
+
+import javax.swing.*;
 
 public class main {
 
     public static void main(String[] args) {
 
         int opcion = 0;
+        boolean continuar = true;
 
         do {
             String menu =
@@ -42,22 +45,32 @@ public class main {
 
             switch (opcion) {
                 case 1:
-
+                    // TransformadaInversa.main(null);
+                    JOptionPane.showMessageDialog(null, "Método aún no implementado");
+                    continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
+
                 case 2:
-
+                    // Convolucion.main(null);
+                    JOptionPane.showMessageDialog(null, "Método aún no implementado");
+                    continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
+
                 case 3:
-
+                    MetodoComposicion.ejecutar();
+                    continuar = preguntarSiContinuar();  // 👈 Preguntar
                     break;
+
                 case 4:
                     JOptionPane.showMessageDialog(
                             null,
-                            "Saliendo del programa...",
+                            "¡Hasta pronto!",
                             "Salir",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+                    continuar = false;  // 👈 Salir directamente
                     break;
+
                 default:
                     JOptionPane.showMessageDialog(
                             null,
@@ -68,7 +81,26 @@ public class main {
                     break;
             }
 
+            // 👇 Si el usuario eligió NO continuar, salir del bucle
+            if (!continuar) {
+                break;
+            }
+
         } while (opcion != 4);
     }
 
+    // 👉 MÉTODO QUE PREGUNTA SI DESEA CONTINUAR
+    private static boolean preguntarSiContinuar() {
+        int respuesta = JOptionPane.showConfirmDialog(
+                null,
+                "¿Deseas regresar al menú principal?",
+                "Confirmación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        // Si elige "Sí" (YES_OPTION), retorna true para continuar
+        // Si elige "No" (NO_OPTION), retorna false para salir
+        return respuesta == JOptionPane.YES_OPTION;
+    }
 }
