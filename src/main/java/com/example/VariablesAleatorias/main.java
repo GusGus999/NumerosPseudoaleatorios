@@ -1,7 +1,5 @@
 package com.example.VariablesAleatorias;
 
-import com.example.VariablesAleatorias.MetodoComposicion;
-
 import javax.swing.*;
 
 public class main {
@@ -9,7 +7,7 @@ public class main {
     public static void main(String[] args) {
 
         int opcion = 0;
-        boolean continuar = true;
+        boolean continuarEnMenu = true; // Esta variable controla el ciclo
 
         do {
             String menu =
@@ -23,71 +21,58 @@ public class main {
             String entrada = JOptionPane.showInputDialog(
                     null,
                     menu,
-                    "Menú métodos aleatorios",
+                    "Generador de Variables Aleatorias",
                     JOptionPane.QUESTION_MESSAGE
             );
 
-            if (entrada == null) { // Cancelar = salir
+            // Si el usuario presiona "Cancelar" o la X en el menú principal, salimos
+            if (entrada == null) {
+                continuarEnMenu = false;
                 break;
             }
 
             try {
                 opcion = Integer.parseInt(entrada.trim());
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Opción inválida, ingresa un número de 1 a 4.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                JOptionPane.showMessageDialog(null, "Error: Ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 continue;
             }
 
             switch (opcion) {
                 case 1:
 
+                    continuarEnMenu = preguntarSiContinuar();
                     break;
 
                 case 2:
-                    // Convolucion.main(null);
-                    MetodoConvolucion.ejecutar();
-                    continuar = preguntarSiContinuar();
-                    break;
 
+                    continuarEnMenu = preguntarSiContinuar();
+                    break;
                 case 3:
+                    MetodoConvolucion.ejecutar();
+                    continuarEnMenu = preguntarSiContinuar();
+                    break;
+                case 4:
                     MetodoComposicion.ejecutar();
-                    continuar = preguntarSiContinuar();  // 👈 Preguntar
+                    continuarEnMenu = preguntarSiContinuar();
                     break;
 
-                case 4:
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "¡Hasta pronto!",
-                            "Salir",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-                    continuar = false;  // 👈 Salir directamente
+                case 5:
+                    // Opción SALIR
+                    JOptionPane.showMessageDialog(null, "¡Hasta pronto!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+                    continuarEnMenu = false; // Esto rompe el ciclo
                     break;
+
 
                 default:
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Opción inválida, ingresa un número de 1 a 4.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE
-                    );
+                    JOptionPane.showMessageDialog(null, "Opción inválida. Elija 1, 2 o 3.", "Error", JOptionPane.WARNING_MESSAGE);
                     break;
             }
 
-            // 👇 Si el usuario eligió NO continuar, salir del bucle
-            if (!continuar) {
-                break;
-            }
-
-        } while (opcion != 4);
+        } while (continuarEnMenu); // El ciclo solo depende de esta variable
     }
 
-    // 👉 MÉTODO QUE PREGUNTA SI DESEA CONTINUAR
+    // Método auxiliar para preguntar si desea volver al menú
     private static boolean preguntarSiContinuar() {
         int respuesta = JOptionPane.showConfirmDialog(
                 null,
@@ -96,9 +81,7 @@ public class main {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
-
-        // Si elige "Sí" (YES_OPTION), retorna true para continuar
-        // Si elige "No" (NO_OPTION), retorna false para salir
+        // Si responde SI (0) retorna true, si responde NO (1) retorna false
         return respuesta == JOptionPane.YES_OPTION;
     }
 }
