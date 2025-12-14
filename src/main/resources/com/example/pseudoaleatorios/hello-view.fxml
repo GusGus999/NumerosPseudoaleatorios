@@ -12,7 +12,7 @@
             <items>
                   <MenuItem fx:id="mi_cuadradosMedios" mnemonicParsing="false" text="Cuadrados Medios" />
                   <MenuItem fx:id="mi_multiplicadorConstante" mnemonicParsing="false" text="Multiplicador Constante" />
-              <MenuItem fx:id="mi_productosMedios" mnemonicParsing="false" text="Productos Medios" />
+                  <MenuItem fx:id="mi_productosMedios" mnemonicParsing="false" text="Productos Medios" />
                   <MenuItem fx:id="mi_aditivo" mnemonicParsing="false" text="Congruencial Aditivo" />
                   <MenuItem fx:id="mi_multiplicativo" mnemonicParsing="false" text="Congruencial Multiplicativo" />
                   <MenuItem fx:id="mi_lineal" mnemonicParsing="false" text="Congruencial Lineal" />

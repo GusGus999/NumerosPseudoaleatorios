@@ -2,6 +2,7 @@ module com.example.pseudoaleatorios {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires POOLibrary;
 
     // AÑADE ESTA LÍNEA PARA EL MODELO
     opens com.example.modelo to javafx.base;
