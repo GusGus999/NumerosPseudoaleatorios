@@ -12,7 +12,6 @@ public class main {
 
     public static void main(String[] args) {
         int opcion;
-
         do {
             String[] metodosOVariables = {
                     "Metodos para generar numeros aleatorios",
@@ -25,16 +24,11 @@ public class main {
                 case 1:
                     numerosAleatorios();
                     break;
-
                 case 2:
                     variablesAleatorias();
                     break;
-
             }
-
         } while (continuar("¿Quieres volver a elegir un tema?"));
-
-
 
     }
 
@@ -55,17 +49,26 @@ public class main {
             opcion = getOptionMenu(metodos, "Generadores", "Numeros Pseudoaleatorios");
 
             switch (opcion) {
-                case 1:
-                    int semilla = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese la semilla", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
-                    int n = Integer.parseInt(JOptionPane.showInputDialog(null,"¿Cuantos numeros desea generar?", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
-                    cuadradosMedios(semilla,n);
+                case 1: //----------Cuadrados Medios----------
+                    int semilla_1 = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese la semilla", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
+                    int n_1 = Integer.parseInt(JOptionPane.showInputDialog(null,"¿Cuantos numeros desea generar?", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
+                    cuadradosMedios(semilla_1,n_1);
                     break;
-                case 2:
-
-                    multiplicadorConstante(5,2345, 10);
+                case 2: //----------Multiplicador Constante----------
+                    int semilla_2 = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese la semilla", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
+                    int a_2 = Integer.parseInt(JOptionPane.showInputDialog(null,"Ingrese el multiplicador", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
+                    int n_2 = Integer.parseInt(JOptionPane.showInputDialog(null,"¿Cuantos numeros desea generar?", "Racabando datos",JOptionPane.QUESTION_MESSAGE));
+                    multiplicadorConstante(a_2,semilla_2, n_2);
                     break;
-                case 3:
-
+                case 3: //----------Productos Medios----------
+                    break;
+                case 4: //----------Congruencial Aditivo----------
+                    break;
+                case 5: //----------Congruencial Multiplicativo---------
+                    break;
+                case 6: //----------Congruencial Lineal-----------
+                    break;
+                case 7: //----------Congruencial Cuadratico-----------
                     break;
             }
         } while (continuar("Volver a los generadores"));
