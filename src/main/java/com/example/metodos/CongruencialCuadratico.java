@@ -61,13 +61,13 @@ public class CongruencialCuadratico {
 
                 // --- DETECCIÓN DE CICLO (Periodo) ---
                 if (xi == x0) {
-                    salida.append("\n[FIN] Periodo completado. Volvimos a la semilla " + x0 + ".\n");
+                    salida.append("\nPeriodo completado. Volvimos a la semilla " + x0 + ".\n");
                     salida.append("Total de números generados: " + i + "\n");
                     break;
                 }
 
                 if (i >= limiteSeguridad) {
-                    salida.append("\n[!] Alerta: Se alcanzó el límite de seguridad (posible ciclo infinito no detectado).\n");
+                    salida.append("\nAlerta: Se alcanzó el límite de seguridad (posible ciclo infinito no detectado).\n");
                     break;
                 }
 

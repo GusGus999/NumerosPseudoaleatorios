@@ -1,6 +1,5 @@
 # Archivos de compilación y empaquetado
 *.class
-*.jar
 *.war
 *.ear
 *.log

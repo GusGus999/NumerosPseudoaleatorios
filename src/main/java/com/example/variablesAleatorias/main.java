@@ -542,7 +542,7 @@ public class main {
             menu += (i + 1) + ".- " + opciones[i] + "\n";
         }
         menu += (opciones.length + 1) + ".- Salir\n";
-        menu += "Seleccione su opción: [1... " + (opciones.length + 1) + "]";
+        menu += "Seleccione su opción: [1..." + (opciones.length + 1) + "]";
         int opcion = 0;
         do {
             opcion = leerInt(menu, encabezado);
