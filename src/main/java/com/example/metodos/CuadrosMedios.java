@@ -86,10 +86,37 @@ public class CuadrosMedios {
     }
 
     public static void main(String[] args) {
-        int semilla = 5735; // Semilla inicial (debe tener más de 3 dígitos)
-        int n = 10; // Cantidad de números aleatorios a generar
+        try {
+            // 1. Pedir la semilla (y0)
+            String inputY0 = JOptionPane.showInputDialog(null,
+                    "Ingrese la semilla inicial (y0):\n(Se recomienda de 4 dígitos)",
+                    "Entrada de Datos",
+                    JOptionPane.QUESTION_MESSAGE);
 
-        cuadradosMedios(semilla, n);
+            // Si el usuario da click en Cancelar, inputY0 será null
+            if (inputY0 == null) return;
+
+            int semilla = Integer.parseInt(inputY0);
+
+            // 2. Pedir la cantidad de iteraciones (n)
+            String inputN = JOptionPane.showInputDialog(null,
+                    "Ingrese la cantidad de números a generar (n):",
+                    "Entrada de Datos",
+                    JOptionPane.QUESTION_MESSAGE);
+
+            if (inputN == null) return;
+
+            int n = Integer.parseInt(inputN);
+
+            // 3. Llamar al metodo con los datos ingresados
+            cuadradosMedios(semilla, n);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error: Por favor ingrese solo números enteros válidos.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 

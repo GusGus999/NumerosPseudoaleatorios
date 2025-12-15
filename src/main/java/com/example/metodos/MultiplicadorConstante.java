@@ -98,7 +98,7 @@ public class MultiplicadorConstante {
                     realizarPruebaAleatoriedad(listaRi);
                     break;
                 case 2:
-                    realizarPruebaIndependenciaPoker(listaRi); // Asumiendo que ya tienes este metodo del paso anterior
+                    realizarPruebaIndependenciaPoker(listaRi);
                     break;
                 case 3:
                     System.out.println("Saliendo...");
@@ -108,6 +108,5 @@ public class MultiplicadorConstante {
             }
         } while (seleccion != 3 && seleccion != -1);
     }
-
 
 }

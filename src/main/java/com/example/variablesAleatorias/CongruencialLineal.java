@@ -1,4 +1,4 @@
-package com.example.VariablesAleatorias;
+package com.example.variablesAleatorias;
 import java.util.*;
 
 public class CongruencialLineal {
@@ -39,7 +39,7 @@ public class CongruencialLineal {
         }
     }
 
-    // 👉 Método para usar el generador desde OTRAS clases (método de composición)
+    //  Metodo para usar el generador desde OTRAS clases (metodo de composición)
     public static double siguienteRi() {
         xPrev = (a * xPrev + c) % m;
         return (double) xPrev / m;

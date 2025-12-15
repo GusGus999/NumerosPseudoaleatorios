@@ -1,4 +1,4 @@
-package com.example.VariablesAleatorias;
+package com.example.variablesAleatorias;
 
 import javax.swing.*;
 import java.awt.Font; // Importante para la alineación

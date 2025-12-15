@@ -3,96 +3,108 @@ package com.example.metodos;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
+import static com.example.pruebas.Aleatoridad.realizarPruebaAleatoriedad;
+import static com.example.pruebas.Independencia.realizarPruebaIndependenciaPoker;
+import static com.example.pruebas.Uniformidad.realizarPruebaUniformidad;
 
 
 public class ProductosMedios {
 
-//el buen belic
-    public static void main(String[] args) {
-        // Crea una instancia de la clase y llama al método que inicia el proceso.
-        ProductosMedios generador = new ProductosMedios();
-        generador.iniciar();
-    }
-
-
-    public void iniciar() {
-        long x0, x1;
-        int D, iteraciones;
-
-        try {
-            // --- Paso 1: Obtener y validar las semillas y las iteraciones ---
-            String seed1Str = pedirDato("Introduce la primera semilla (x0):", "Método de Productos Medios");
-            if (seed1Str == null) return; // El usuario canceló
-            x0 = Long.parseLong(seed1Str);
-            if (x0 <= 0) throw new NumberFormatException("La semilla debe ser un número positivo.");
-            D = seed1Str.length();
-
-            String seed2Str = pedirDato("Introduce la segunda semilla (x1):\n(Debe tener " + D + " dígitos)", "Método de Productos Medios");
-            if (seed2Str == null) return; // El usuario canceló
-            if (seed2Str.length() != D) throw new NumberFormatException("La segunda semilla debe tener " + D + " dígitos.");
-            x1 = Long.parseLong(seed2Str);
-
-            String iteracionesStr = pedirDato("Introduce el número de valores a generar (N):", "Método de Productos Medios");
-            if (iteracionesStr == null) return; // El usuario canceló
-            iteraciones = Integer.parseInt(iteracionesStr);
-            if (iteraciones <= 0) throw new NumberFormatException("El número de iteraciones debe ser mayor que cero.");
-
-        } catch (NumberFormatException e) {
-            // Si ocurre cualquier error en la conversión o validación, muestra el mensaje y termina.
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error de entrada", JOptionPane.ERROR_MESSAGE);
-            return;
+    public static void productosMedios(int x0, int x1, int n) {
+        // Validación inicial
+        if (String.valueOf(x0).length() < 3 || String.valueOf(x1).length() < 3) {
+            JOptionPane.showMessageDialog(null,
+                    "Advertencia: Las semillas deben tener preferiblemente 4 dígitos.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
         }
 
-        // --- Paso 2: Generar los números y construir la tabla de resultados ---
-        generarYMostrarResultados(x0, x1, D, iteraciones);
-    }
+        // 1. Preparar estructuras
+        StringBuilder salida = new StringBuilder();
+        ArrayList<Double> listaRi = new ArrayList<>();
 
+        // Encabezados
+        salida.append(String.format("%-4s %-6s %-6s %-12s %-12s %-6s %-8s\n",
+                "i", "X(i)", "X(i+1)", "Producto", "Prod(8d)", "Centro", "Ri"));
+        salida.append("----------------------------------------------------------------------\n");
 
-    private String pedirDato(String mensaje, String titulo) {
-        return JOptionPane.showInputDialog(null, mensaje, titulo, JOptionPane.QUESTION_MESSAGE);
-    }
+        int semilla1 = x0;
+        int semilla2 = x1;
 
+        // 2. Ciclo de Generación
+        for (int i = 0; i < n; i++) {
+            long producto = (long) semilla1 * semilla2;
 
+            // Formatear a 8 dígitos rellenando con ceros a la izquierda
+            String productoStr = String.format("%08d", producto);
 
-    private void generarYMostrarResultados(long x0, long x1, int D, int N) {
-        StringBuilder resultados = new StringBuilder();
-        resultados.append(String.format("%-5s | %-10s | %-10s | %-18s | %-10s | %-10s\n",
-                "y(i)", "n1", "n2", "Resultado (n1*n2)", "x(i)", "r(i)"));
-        resultados.append(new String(new char[80]).replace('\0', '-')).append("\n");
-
-        long current_x0 = x0;
-        long current_x1 = x1;
-        double divisor = Math.pow(10, D);
-
-        for (int i = 0; i < N; i++) {
-            long producto = current_x0 * current_x1;
-            String productoStr = String.valueOf(producto);
-
-            int longitudDeseada = 2 * D;
-            while (productoStr.length() < longitudDeseada) {
-                productoStr = "0" + productoStr;
+            // Manejo de seguridad por si el producto es muy pequeño o muy grande
+            String digitosCentrales;
+            if (productoStr.length() >= 6) {
+                // Extraer posiciones 2,3,4,5 (centrales de 8 dígitos)
+                digitosCentrales = productoStr.substring(2, 6);
+            } else {
+                // Caso borde (si el número colapsa a 0)
+                digitosCentrales = "0000";
             }
 
-            int startIndex = (productoStr.length() - D) / 2;
-            String x_str = productoStr.substring(startIndex, startIndex + D);
-            long nuevo_x = Long.parseLong(x_str);
-            double r_i = nuevo_x / divisor;
+            int siguienteX = Integer.parseInt(digitosCentrales);
+            double ri = siguienteX / 10000.0;
 
-            resultados.append(String.format("%-5s | %-10d | %-10d | %-18d | %-10d | %-10.4f\n",
-                    "y" + i, current_x0, current_x1, producto, nuevo_x, r_i));
+            // Guardar para estadísticas
+            listaRi.add(ri);
 
-            current_x0 = current_x1;
-            current_x1 = nuevo_x;
+            // Agregar a la tabla visual
+            salida.append(String.format("%-4d %-6d %-6d %-12d %-12s %-6s %.4f\n",
+                    i, semilla1, semilla2, producto, productoStr, digitosCentrales, ri));
+
+            // Actualizar semillas:
+            // La semilla1 pasa a ser la vieja semilla2
+            // La semilla2 pasa a ser el nuevo número generado
+            semilla1 = semilla2;
+            semilla2 = siguienteX;
         }
 
-        // Muestra los resultados en un JTextArea con Scroll
-        JTextArea textArea = new JTextArea(resultados.toString());
+        // 3. Preparar componente visual
+        JTextArea textArea = new JTextArea(salida.toString());
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         textArea.setEditable(false);
-
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(650, 400));
+        scrollPane.setPreferredSize(new java.awt.Dimension(650, 400));
 
-        JOptionPane.showMessageDialog(null, scrollPane, "Resultados del Método de Productos Medios", JOptionPane.INFORMATION_MESSAGE);
+        // 4. Ciclo del Menú de Pruebas
+        Object[] opciones = {"Uniformidad", "Aleatoriedad", "Prueba de Póker", "Salir"};
+        int seleccion = -1;
+
+        do {
+            seleccion = JOptionPane.showOptionDialog(
+                    null,
+                    scrollPane,
+                    "Resultados - Productos Medios",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
+
+            switch (seleccion) {
+                case 0:
+                    realizarPruebaUniformidad(listaRi);
+                    break;
+                case 1:
+                    realizarPruebaAleatoriedad(listaRi);
+                    break;
+                case 2:
+                    realizarPruebaIndependenciaPoker(listaRi);
+                    break;
+                case 3:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    break;
+            }
+        } while (seleccion != 3 && seleccion != -1);
     }
+
 }
