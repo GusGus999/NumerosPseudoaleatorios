@@ -16,7 +16,7 @@ public class CongruencialLineal {
         ArrayList<Double> listaRi = new ArrayList<>();
 
         salida.append("Parámetros: X0=" + x0 + ", a=" + a + ", c=" + c + ", m=" + m + "\n");
-        salida.append("Condiciones de Hull-Dobell verificadas: Periodo Completo garantizado (N = " + m + ").\n\n");
+        salida.append("Condiciones Verificadas. Periodo Completo garantizado (N = " + m + ").\n\n");
 
         salida.append(String.format("%-6s %-10s %-20s %-15s %-10s\n",
                 "i", "Xi", "a*Xi + c", "Xi+1 (Mod)", "Ri"));

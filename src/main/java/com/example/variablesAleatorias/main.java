@@ -34,7 +34,6 @@ public class main {
                     break;
             }
         } while (continuar("¿Quieres volver a elegir un tema?"));
-
     }
 
     public static void numerosAleatorios(){
@@ -86,11 +85,12 @@ public class main {
                                 JOptionPane.ERROR_MESSAGE);
                     }
                     break;
+
                 case 2: //----------Multiplicador Constante----------
                     try {
                         // 1. Pedir la semilla (y0)
                         String inputY0 = JOptionPane.showInputDialog(null,
-                                "Ingrese la semilla inicial (y0):\n(Se recomienda de 4 dígitos)",
+                                "Ingrese la semilla inicial (y0):\nSe recomienda de 4 dígitos",
                                 "Entrada de Datos",
                                 JOptionPane.QUESTION_MESSAGE);
 
@@ -100,7 +100,7 @@ public class main {
 
                         // 2. Pedir la constante
                         String inputA = JOptionPane.showInputDialog(null,
-                                "Ingrese el valor de la constante multiplicadora(a):",
+                                "Ingrese el valor de la constante multiplicadora (a):",
                                 "Entrada de Datos",
                                 JOptionPane.QUESTION_MESSAGE);
 
@@ -126,11 +126,12 @@ public class main {
                                 JOptionPane.ERROR_MESSAGE);
                     }
                     break;
+
                 case 3: //----------Productos Medios----------
                     try {
                         // 1. Pedir la semilla (y0)
                         String inputY0 = JOptionPane.showInputDialog(null,
-                                "Ingrese la semilla inicial (y0):\n(Se recomienda de 4 dígitos)",
+                                "Ingrese la semilla inicial (y0):\nSe recomienda de 4 dígitos",
                                 "Entrada de Datos",
                                 JOptionPane.QUESTION_MESSAGE);
 
@@ -140,7 +141,7 @@ public class main {
 
                         // 1. Pedir la semilla (y0)
                         String inputY1 = JOptionPane.showInputDialog(null,
-                                "Ingrese la segunda semilla (y1):\n(Se recomienda de 4 dígitos)",
+                                "Ingrese la segunda semilla (y1):\nSe recomienda de 4 dígitos",
                                 "Entrada de Datos",
                                 JOptionPane.QUESTION_MESSAGE);
 
@@ -172,7 +173,7 @@ public class main {
                         // 1. Pedir la cantidad de semillas
                         String inputCantidad = JOptionPane.showInputDialog(null,
                                 "¿Cuántas semillas desea ingresar?",
-                                "Configuración - Paso 1",
+                                "Paso 1: Configuración",
                                 JOptionPane.QUESTION_MESSAGE);
 
                         if (inputCantidad == null) return; // Si cancela
@@ -198,7 +199,7 @@ public class main {
                         // 3. Pedir el módulo
                         String inputM = JOptionPane.showInputDialog(null,
                                 "Ingrese el valor del módulo (m):",
-                                "Configuración - Paso Final",
+                                "Paso Final",
                                 JOptionPane.QUESTION_MESSAGE);
 
                         if (inputM == null) return;
@@ -214,11 +215,12 @@ public class main {
                                 JOptionPane.ERROR_MESSAGE);
                     }
                     break;
+
                 case 5: //----------Congruencial Multiplicativo---------
                     try {
                         // 1. Pedir Semilla (X0)
                         String inputX0 = JOptionPane.showInputDialog(null,
-                                "Ingrese la semilla inicial (X0):\n(Debe ser impar)",
+                                "Ingrese la semilla inicial (X0):\nEl numero debe ser impar",
                                 "Paso 1: Semilla", JOptionPane.QUESTION_MESSAGE);
                         if (inputX0 == null) return;
                         int x0 = Integer.parseInt(inputX0);
@@ -243,7 +245,7 @@ public class main {
 
                         while (!dValido) {
                             String inputD = JOptionPane.showInputDialog(null,
-                                    "Ingrese el valor de 'd' (para m = 2^d):\nNota: d debe ser mayor a 3.",
+                                    "Ingrese el valor de 'd'\nPara m = 2^d:\nNota: d debe ser mayor a 3.",
                                     "Paso 3: Exponente", JOptionPane.QUESTION_MESSAGE);
                             if (inputD == null) return;
 
@@ -284,22 +286,22 @@ public class main {
                         // --- ENTRADA DE DATOS ---
 
                         // X0
-                        String inX0 = JOptionPane.showInputDialog(null, "Ingrese la semilla (X0):", "Paso 1", JOptionPane.QUESTION_MESSAGE);
+                        String inX0 = JOptionPane.showInputDialog(null, "Ingrese la semilla (X0):", "Paso 1: Semilla", JOptionPane.QUESTION_MESSAGE);
                         if(inX0==null) return;
                         int x0 = Integer.parseInt(inX0);
 
                         // a
-                        String inA = JOptionPane.showInputDialog(null, "Ingrese el multiplicador (a):", "Paso 2", JOptionPane.QUESTION_MESSAGE);
+                        String inA = JOptionPane.showInputDialog(null, "Ingrese el multiplicador (a)\n(a-1) debe ser multiplo de todos los factors primos de m:", "Paso 2: Multiplicador", JOptionPane.QUESTION_MESSAGE);
                         if(inA==null) return;
                         int a = Integer.parseInt(inA);
 
                         // c
-                        String inC = JOptionPane.showInputDialog(null, "Ingrese la constante aditiva (c):", "Paso 3", JOptionPane.QUESTION_MESSAGE);
+                        String inC = JOptionPane.showInputDialog(null, "Ingrese la constante aditiva (c)\nDebe ser primo relativo con (m):", "Paso 3: Constante", JOptionPane.QUESTION_MESSAGE);
                         if(inC==null) return;
                         int c = Integer.parseInt(inC);
 
                         // m
-                        String inM = JOptionPane.showInputDialog(null, "Ingrese el módulo (m): ", "Paso 4", JOptionPane.QUESTION_MESSAGE);
+                        String inM = JOptionPane.showInputDialog(null, "Ingrese el módulo (m)\nDebe ser primo relativo con (c)\nSi m es multiplo de 4 entonces 4 debera ser multiplo de a-1:", "Paso 4: Modulo", JOptionPane.QUESTION_MESSAGE);
                         if(inM==null) return;
                         int m = Integer.parseInt(inM);
 
