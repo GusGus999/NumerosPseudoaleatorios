@@ -11,8 +11,6 @@ import static com.example.pruebas.Uniformidad.realizarPruebaUniformidad;
 public class CongruencialLineal {
 
     public static void congruencialLineal(int x0, int a, int c, int m) {
-        // --- SIN MODIFICACIONES A X0 ---
-        // Usamos las variables tal cual las ingresó el usuario.
 
         StringBuilder salida = new StringBuilder();
         ArrayList<Double> listaRi = new ArrayList<>();
