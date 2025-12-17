@@ -43,8 +43,8 @@ public class CongruencialLineal {
             i++;
 
             if (i == m) {
-                salida.append("\nCiclo completado. Se han generado " + i + " números (Periodo Completo).\n");
-                salida.append("El siguiente valor sería la semilla original: " + x0 + "\n");
+                salida.append("\nCiclo completado. Se alcanzó la semilla original " + x0 + ".\n");
+                salida.append("Total de números generados: " + i + " (Igual a m: " + m + ")\n");
                 break;
             }
 
