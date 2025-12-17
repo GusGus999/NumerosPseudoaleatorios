@@ -272,14 +272,6 @@ public class main {
                             return; // Detener el programa
                         }
 
-                        // Mostrar confirmación antes de ejecutar
-                        JOptionPane.showMessageDialog(null,
-                                "Datos Validados:\n" +
-                                        "m = 2^" + d + " = " + m + "\n" +
-                                        "MCD(a, m) = 1 (Son primos relativos)\n\n" +
-                                        "Ejecutando generador...",
-                                "Validación Exitosa", JOptionPane.INFORMATION_MESSAGE);
-
                         // Ejecutar algoritmo
                         congruencialMultiplicativo(x0, a, m);
 
@@ -355,22 +347,68 @@ public class main {
                             }
                         }
 
-                        // Si pasa todas las validaciones:
-                        JOptionPane.showMessageDialog(null,
-                                "Todas las condiciones se cumplen\n" +
-                                        "El generador tendrá un periodo completo de tamaño " + m + ".",
-                                "Validación Exitosa", JOptionPane.INFORMATION_MESSAGE);
-
                         congruencialLineal(x0, a, c, m);
 
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "Error: Ingrese solo números enteros.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
+
                 case 7: //----------Congruencial Cuadratico-----------
                     try {
-                        // 1. Pedir 'd' para calcular m = 2^d
-                        String inD = JOptionPane.showInputDialog(null, "Ingrese el valor de 'd' (para m=2^d):", "Paso 1: Módulo", JOptionPane.QUESTION_MESSAGE);
+                        // Pedir Semilla X0
+                        String inX0 = JOptionPane.showInputDialog(null, "Ingrese la semilla (X0):", "Paso 1: Semilla", JOptionPane.QUESTION_MESSAGE);
+                        if(inX0 == null) return;
+                        int x0 = Integer.parseInt(inX0);
+
+                        // Pedir 'a' y validar que sea PAR
+                        int a = 0;
+                        boolean aValido = false;
+                        while (!aValido) {
+                            String inA = JOptionPane.showInputDialog(null, "Ingrese 'a'\nDebe ser un numero par:", "Paso 2: Coeficiente Cuadrático", JOptionPane.QUESTION_MESSAGE);
+                            if(inA == null) return;
+                            a = Integer.parseInt(inA);
+
+                            if (a % 2 == 0) {
+                                aValido = true;
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: 'a'\nDebe ser un número PAR.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
+                        // Pedir 'b' y validar (b-1) mod 4 = 1
+                        int b = 0;
+                        boolean bValido = false;
+                        while (!bValido) {
+                            String inB = JOptionPane.showInputDialog(null, "Ingrese 'b'\nCondición: (b-1) mod 4 = 1):", "Paso 3: Coeficiente Lineal", JOptionPane.QUESTION_MESSAGE);
+                            if(inB == null) return;
+                            b = Integer.parseInt(inB);
+
+                            // Validación específica solicitada
+                            if ((b - 1) % 4 == 1) {
+                                bValido = true;
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error:\nNo se cumple que (b-1) mod 4 = 1.\nEjemplo válido: 26 (25 mod 4 = 1).", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
+                        // Pedir 'c' y validar que sea IMPAR
+                        int c = 0;
+                        boolean cValido = false;
+                        while (!cValido) {
+                            String inC = JOptionPane.showInputDialog(null, "Ingrese 'c'\nDebe ser un numero impar:", "Paso 4: Constante Aditiva", JOptionPane.QUESTION_MESSAGE);
+                            if(inC == null) return;
+                            c = Integer.parseInt(inC);
+
+                            if (c % 2 != 0) {
+                                cValido = true;
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: 'c'\nDebe ser un número impar.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
+                        // Pedir 'd' para calcular m = 2^d
+                        String inD = JOptionPane.showInputDialog(null, "Ingrese el valor de 'd'\nSe usa para m=2^d:", "Paso 5: Módulo", JOptionPane.QUESTION_MESSAGE);
                         if(inD == null) return;
                         int d = Integer.parseInt(inD);
                         if (d <= 0) {
@@ -379,69 +417,8 @@ public class main {
                         }
                         int m = (int) Math.pow(2, d);
 
-                        // 2. Pedir Semilla X0
-                        String inX0 = JOptionPane.showInputDialog(null, "Ingrese la semilla (X0):", "Paso 2: Semilla", JOptionPane.QUESTION_MESSAGE);
-                        if(inX0 == null) return;
-                        int x0 = Integer.parseInt(inX0);
-
-                        // 3. Pedir 'a' y validar que sea PAR
-                        int a = 0;
-                        boolean aValido = false;
-                        while (!aValido) {
-                            String inA = JOptionPane.showInputDialog(null, "Ingrese 'a' (Debe ser PAR):", "Paso 3: Coeficiente Cuadrático", JOptionPane.QUESTION_MESSAGE);
-                            if(inA == null) return;
-                            a = Integer.parseInt(inA);
-
-                            if (a % 2 == 0) {
-                                aValido = true;
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: 'a' debe ser un número PAR.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-
-                        // 4. Pedir 'b' y validar (b-1) mod 4 = 1
-                        int b = 0;
-                        boolean bValido = false;
-                        while (!bValido) {
-                            String inB = JOptionPane.showInputDialog(null, "Ingrese 'b' (Condición: (b-1) mod 4 = 1):", "Paso 4: Coeficiente Lineal", JOptionPane.QUESTION_MESSAGE);
-                            if(inB == null) return;
-                            b = Integer.parseInt(inB);
-
-                            // Validación específica solicitada
-                            if ((b - 1) % 4 == 1) {
-                                bValido = true;
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: No se cumple que (b-1) mod 4 = 1.\nEjemplo válido: 26 (25 mod 4 = 1).", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-
-                        // 5. Pedir 'c' y validar que sea IMPAR
-                        int c = 0;
-                        boolean cValido = false;
-                        while (!cValido) {
-                            String inC = JOptionPane.showInputDialog(null, "Ingrese 'c' (Debe ser IMPAR):", "Paso 5: Constante Aditiva", JOptionPane.QUESTION_MESSAGE);
-                            if(inC == null) return;
-                            c = Integer.parseInt(inC);
-
-                            if (c % 2 != 0) {
-                                cValido = true;
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: 'c' debe ser un número IMPAR.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-
-                        // Resumen de validaciones
-                        JOptionPane.showMessageDialog(null,
-                                "Validaciones Correctas:\n" +
-                                        "- m = 2^" + d + " = " + m + "\n" +
-                                        "- a es Par (" + a + ")\n" +
-                                        "- (b-1) mod 4 = 1 (" + b + " -> " + ((b-1)%4) + ")\n" +
-                                        "- c es Impar (" + c + ")\n\n" +
-                                        "Ejecutando...",
-                                "Éxito", JOptionPane.INFORMATION_MESSAGE);
-
                         // Llamada al metodo
-                        congruencialCuadratico(x0, a, b, c, m);
+                        congruencialCuadratico(x0, a, b, c, d, m);
 
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "Error: Ingrese solo números enteros.", "Error", JOptionPane.ERROR_MESSAGE);

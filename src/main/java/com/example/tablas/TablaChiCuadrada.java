@@ -4,7 +4,6 @@ public class TablaChiCuadrada {
 
     // Tabla de valores críticos para Alpha = 0.05 (95% de confianza)
     // El índice del arreglo corresponde a los Grados de Libertad (gl).
-    // El índice 0 se deja vacío para que coincida (arr[1] = 1 gl).
     private static final double[] VALORES_CRITICOS_05 = {
             0.0,    // 0 (No existe)
             3.841,  // 1
@@ -52,11 +51,6 @@ public class TablaChiCuadrada {
         }
     }
 
-    /**
-     * Aproximación de Wilson-Hilferty para gl > 30
-     * Fórmula: v * (1 - 2/(9v) + z * sqrt(2/(9v)))^3
-     * Donde z = 1.645 para alpha = 0.05
-     */
     private static double calcularAproximacionWilsonHilferty(int gl) {
         double z = 1.645; // Valor Z para 95% de confianza
         double parteA = 2.0 / (9.0 * gl);
